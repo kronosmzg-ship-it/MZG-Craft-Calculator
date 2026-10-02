@@ -1,0 +1,59 @@
+# ============================================================
+# MZG Craft Calculator — репозиторна гігієна
+# ТОВ «МЗГ СЕРВІС ГРУП» · MZG Universe
+# ============================================================
+
+# --- Локальні резервні копії та експорти (НЕ в git!) ---
+# Сюди потрапляють MZG_Craft_Calc_*.json з реальними цінами/рецептами.
+# Вони живуть лише на пристрої та у приватному сховищі (Drive/Telegram).
+*.json
+!package.json
+!package-lock.json
+
+# --- Захист від повторення інциденту «docx замість html» ---
+# Word/WPS/Docs-файли ніколи не мають потрапляти в корінь репо.
+*.docx
+*.doc
+*.rtf
+*.odt
+*.pages
+~$*
+
+# --- Секрети, локальні конфіги, особисті дані ---
+.env
+.env.*
+*.local
+secrets/
+config.local.*
+credentials*
+*.pem
+*.key
+
+# --- Робочі нотатки, чернетки, тимчасове ---
+notes/
+drafts/
+todo*
+*.bak
+*.tmp
+*.temp
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- Збірка / залежності (якщо колись буде npm-контур) ---
+node_modules/
+dist/
+build/
+.cache/
+.parcel-cache/
+
+# --- Редактори / ОС-сміття ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
