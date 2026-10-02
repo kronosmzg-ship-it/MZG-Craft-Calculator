@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#111111" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>MZG Craft Calculator</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <style>
+    :root {
+      --bg: #111;
+      --panel: #1a1a1a;
+      --panel2: #0d0d0d;
+      --border: #333;
+      --accent: #c8a84e;
+      --text: #e0e0e0;
+      --dim: #777;
+      --green: #2e7d32;
+      --red: #b71c1c;
+      --blue: #1565c0;
+      --orange: #e65100;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Courier New", monospace;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--panel);
+      border-bottom: 2px solid var(--accent);
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 15px;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+    }
+
+    .sub {
+      font-size: 10px;
+      color: var(--dim);
+    }
+
+    nav {
+      position: sticky;
+      top: 47px;
+      z-index: 99;
+      display: flex;
+      gap: 4px;
+      padding: 8px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+
+    nav button {
+      flex: 0 0 auto;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--dim);
+      font-family: inherit;
+      font-size: 12px;
+      padding: 9px 12px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    nav button.active {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: #1f1f1f;
+    }
+
+    .tab {
+      display: none;
+      padding: 12px;
+    }
+
+    .tab.active { display: block; }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 5px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      color: var(--dim);
+      margin: 7px 0 3px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 9px;
+      font-family: inherit;
+      font-size: 13px;
+      border-radius: 2px;
+    }
+
+    textarea { min-height: 60px; resize: vertical; }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .row {
+      display: flex;
+      gap: 8px;
+      align-items: end;
+    }
+
+    .row > * { flex: 1; }
+
+    .btn {
+      width: 100%;
+      margin-top: 8px;
+      border: none;
+      background: var(--accent);
+      color: #000;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      padding: 10px 12px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .btn:active { opacity: 0.82; }
+    .btn.green { background: var(--green); color: #fff; }
+    .btn.blue { background: var(--blue); color: #fff; }
+    .btn.red { background: var(--red); color: #fff; }
+    .btn.gray { background: #333; color: var(--text); }
+    .btn.sm { width: auto; margin: 0; padding: 7px 10px; font-size: 11px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th {
+      text-align: left;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      padding: 6px 4px;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 6px 4px;
+      border-bottom: 1px solid #222;
+      vertical-align: middle;
+    }
+
+    td input {
+      padding: 6px;
+      font-size: 12px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 2px;
+      font-size: 10px;
+      font-weight: bold;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .badge.wax { background: #5d4037; }
+    .badge.filler { background: #33691e; }
+    .badge.binder { background: #4a148c; }
+    .badge.additive { background: #01579b; }
+    .badge.dye { background: #880e4f; }
+    .badge.fragrance { background: #1b5e20; }
+    .badge.wick { background: var(--orange); }
+    .badge.packaging { background: #37474f; }
+
+    .result-box {
+      display: none;
+      background: #0a0a0a;
+      border: 2px solid var(--accent);
+      border-radius: 4px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+
+    .result-box h4 {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 13px;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 3px 0;
+      font-size: 12px;
+    }
+
+    .result-row .val {
+      color: #fff;
+      font-weight: bold;
+      text-align: right;
+    }
+
+    .warn { color: var(--accent); }
+    .error { color: var(--red); }
+    .ok { color: var(--green); }
+
+    .del {
+      background: none;
+      border: none;
+      color: var(--red);
+      font-size: 17px;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+
+    .empty {
+      color: var(--dim);
+      font-style: italic;
+      text-align: center;
+      padding: 16px;
+    }
+
+    .recipe-card {
+      border-left: 3px solid var(--accent);
+    }
+
+    .recipe-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .recipe-actions {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .small {
+      font-size: 11px;
+      color: var(--dim);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: var(--green);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 4px;
+      font-size: 12px;
+      z-index: 999;
+      display: none;
+      max-width: 92vw;
+      text-align: center;
+    }
+
+    @media (min-width: 700px) {
+      .tab { max-width: 760px; margin: 0 auto; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>MZG CRAFT CALC</h1>
+      <div class="sub">Малые партии · свечи · кашпо · гейзерные модули</div>
+    </div>
+    <div class="sub">IndexedDB · offline</div>
+  </header>
+
+  <nav>
+    <button class="active" data-tab="calc" onclick="showTab('calc')">Калькулятор</button>
+    <button data-tab="materials" onclick="showTab('materials')">Материалы</button>
+    <button data-tab="recipes" onclick="showTab('recipes')">Рецепты</button>
+    <button data-tab="settings" onclick="showTab('settings')">Настройки</button>
+  </nav>
+
+  <!-- CALCULATOR -->
+  <section id="tab-calc" class="tab active">
+    <div class="card">
+      <h3>Партия</h3>
+      <label>Название рецепта</label>
+      <input id="recipeName" placeholder="Например: MZGdonut v2.2 Anti-Mosquito" />
+
+      <div class="row">
+        <div>
+          <label>Тип</label>
+          <select id="productType">
+            <option value="candle">Свеча</option>
+            <option value="planter">Кашпо</option>
+            <option value="hybrid">Гейзер / гибрид</option>
+            <option value="other">Другое</option>
+          </select>
+        </div>
+        <div>
+          <label>Масса партии, г</label>
+          <input id="batchMass" type="number" min="1" step="1" value="1000" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Масса 1 изделия, г</label>
+          <input id="itemWeight" type="number" min="0" step="1" value="100" />
+        </div>
+        <div>
+          <label>Потери, %</label>
+          <input id="wastePct" type="number" min="0" max="100" step="0.1" value="5" />
+        </div>
+      </div>
+
+      <label>Примечание</label>
+      <textarea id="recipeNotes" placeholder="Форма, температура заливки, время полимеризации, QC-метка..."></textarea>
+
+      <div class="row">
+        <button class="btn gray" onclick="clearRecipe()">Новая</button>
+        <button class="btn blue" onclick="normalizePercent()">Нормализовать 100%</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Добавить компонент</h3>
+      <label>Материал</label>
+      <select id="calcMaterial" onchange="updateComponentMode()"></select>
+
+      <div class="row">
+        <div>
+          <label>Режим</label>
+          <select id="compMode">
+            <option value="percent">% массы</option>
+            <option value="perItem">на изделие</option>
+          </select>
+        </div>
+        <div>
+          <label>Значение</label>
+          <input id="compValue" type="number" min="0" step="0.1" value="10" />
+        </div>
+      </div>
+
+      <button class="btn" onclick="addComponent()">Добавить</button>
+    </div>
+
+    <div class="card">
+      <h3>Состав</h3>
+      <div id="componentList"><div class="empty">Компоненты не добавлены</div></div>
+      <div id="totalPercent" class="small" style="text-align:right;margin-top:6px;"></div>
+    </div>
+
+    <button class="btn green" onclick="calculateBatch()">Рассчитать</button>
+    <button class="btn blue" onclick="saveRecipe()">Сохранить рецепт</button>
+
+    <div id="resultBox" class="result-box">
+      <h4>Результат</h4>
+      <div id="resultContent"></div>
+    </div>
+  </section>
+
+  <!-- MATERIALS -->
+  <section id="tab-materials" class="tab">
+    <div class="card">
+      <h3>Поиск</h3>
+      <div class="row">
+        <div style="flex:2">
+          <input id="matSearch" placeholder="Название, категория, примечание..." oninput="renderMaterials()" />
+        </div>
+        <div>
+          <select id="matFilter" onchange="renderMaterials()">
+            <option value="">Все категории</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 id="matFormTitle">Новый материал</h3>
+      <input type="hidden" id="editingMaterialId" value="" />
+
+      <label>Название</label>
+      <input id="newMatName" placeholder="Например: Парафин П-2" />
+
+      <div class="row">
+        <div>
+          <label>Категория</label>
+          <select id="newMatCat"></select>
+        </div>
+        <div>
+          <label>Ед.</label>
+          <select id="newMatUnit">
+            <option value="кг">кг</option>
+            <option value="г">г</option>
+            <option value="л">л</option>
+            <option value="мл">мл</option>
+            <option value="шт">шт</option>
+            <option value="м">м</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Цена, грн / ед.</label>
+          <input id="newMatPrice" type="number" min="0" step="0.01" value="0" />
+        </div>
+      </div>
+
+      <label>Примечание</label>
+      <input id="newMatNote" placeholder="Например: t° плавления 52–54°C" />
+
+      <div class="row">
+        <button class="btn" onclick="saveMaterial()">Сохранить</button>
+        <button class="btn gray" onclick="cancelEditMaterial()">Отменить</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>База материалов: <span id="matCount">0</span></h3>
+      <div id="materialList"></div>
+    </div>
+  </section>
+
+  <!-- RECIPES -->
+  <section id="tab-recipes" class="tab">
+    <div class="card">
+      <h3>Сохраненные рецепты</h3>
+      <div id="recipeList"><div class="empty">Нет сохраненных рецептов</div></div>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id="tab-settings" class="tab">
+    <div class="card">
+      <h3>Цеховые параметры</h3>
+      <div class="row">
+        <div>
+          <label>Потери по умолчанию, %</label>
+          <input id="setWaste" type="number" min="0" max="100" step="0.1" value="5" />
+        </div>
+        <div>
+          <label>Энергия на партию, грн</label>
+          <input id="setEnergy" type="number" min="0" step="0.1" value="0" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Труд на партию, грн</label>
+          <input id="setLabor" type="number" min="0" step="0.1" value="0" />
+        </div>
+        <div>
+          <label>QC на изделие, грн</label>
+          <input id="setQcFee" type="number" min="0" step="0.01" value="0.35" />
+        </div>
+      </div>
+
+      <label>Роялти / внутренний сбор, %</label>
+      <input id="setRoyalty" type="number" min="0" max="100" step="0.1" value="15" />
+
+      <button class="btn" onclick="saveSettings()">Сохранить настройки</button>
+    </div>
+
+    <div class="card">
+      <h3>Резервные копии</h3>
+      <button class="btn blue" onclick="exportAll()">Экспорт JSON</button>
+      <button class="btn" onclick="document.getElementById('importFile').click()">Импорт JSON</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importAll(event)" />
+      <button class="btn red" onclick="resetDB()">Сброс базы</button>
+    </div>
+
+    <div class="card">
+      <h3>О системе</h3>
+      <div class="small">
+        MZG Craft Calculator v1.0<br />
+        ТОВ "МЗГ СЕРВІС ГРУП" · м. Дніпро<br />
+        PWA · IndexedDB · offline-ready<br />
+        [DB_SNAPSHOT: 2026-04] · цены/тарифы: [VERIFY_EXTERNAL]
+      </div>
+    </div>
+  </section>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const DB_NAME = "MZGCraftCalc";
+    const DB_VER = 1;
+
+    const CATS = {
+      wax: "Воск / основа",
+      filler: "Наполнитель",
+      binder: "Связующее",
+      additive: "Добавка",
+      dye: "Краситель",
+      fragrance: "Ароматизатор",
+      wick: "Фитиль",
+      packaging: "Упаковка / расходник"
+    };
+
+    const BULK_UNITS = ["кг", "г", "л", "мл"];
+
+    let db;
+    let materials = [];
+    let recipes = [];
+    let currentComponents = [];
+    let currentRecipeId = null;
+
+    let settings = {
+      waste: 5,
+      energy: 0,
+      labor: 0,
+      qcFee: 0.35,
+      royalty: 15
+    };
+
+    const DEFAULT_MATERIALS = [
+      { name: "Парафин П-2", cat: "wax", unit: "кг", price: 45, note: "Демо-цена [VERIFY_EXTERNAL]. t° 52–54°C." },
+      { name: "Стеарин Т-12", cat: "wax", unit: "кг", price: 62, note: "Демо-цена [VERIFY_EXTERNAL]. Твёрдость, матовость." },
+      { name: "Соевый воск", cat: "wax", unit: "кг", price: 120, note: "Демо-цена [VERIFY_EXTERNAL]. Эко-линейка." },
+      { name: "Пчелиный воск", cat: "wax", unit: "кг", price: 280, note: "Демо-цена [VERIFY_EXTERNAL]. Premium." },
+      { name: "Микрокристаллический воск", cat: "wax", unit: "кг", price: 95, note: "Демо-цена [VERIFY_EXTERNAL]. Гибкость, адгезия." },
+
+      { name: "Костра конопли 0.3–0.8 мм", cat: "filler", unit: "кг", price: 18, note: "MZGdonut v2.2, обычно 6–8%." },
+      { name: "Костра конопли 1–3 мм", cat: "filler", unit: "кг", price: 15, note: "Крупная фракция для кашпо." },
+      { name: "Древесная мука", cat: "filler", unit: "кг", price: 12, note: "Сосна, фракция до 200 меш." },
+      { name: "Перлит вспученный", cat: "filler", unit: "кг", price: 25, note: "Лёгкость, теплоизоляция." },
+      { name: "Вермикулит", cat: "filler", unit: "кг", price: 30, note: "Огнестойкость, текстура." },
+      { name: "Алюминиевая пудра / порошок", cat: "filler", unit: "кг", price: 180, note: "MZG Front, вторичный алюминий. Требует ТБ." },
+
+      { name: "Цемент Г-66", cat: "binder", unit: "кг", price: 28, note: "Скульптурный гипс / Г-66." },
+      { name: "Огнеупорный цемент", cat: "binder", unit: "кг", price: 55, note: "Высокотемпературные корпуса." },
+      { name: "Эпоксидная смола", cat: "binder", unit: "кг", price: 320, note: "Барьер, пропитка, финиш." },
+      { name: "Жидкое стекло", cat: "binder", unit: "кг", price: 22, note: "Гидроизоляция, связка." },
+      { name: "Sika-полимер / латекс", cat: "binder", unit: "кг", price: 185, note: "Адгезия, эластичность." },
+      { name: "Портландцемент М500", cat: "binder", unit: "кг", price: 18, note: "Базовые кашпо." },
+
+      { name: "TiO2 диоксид титана", cat: "additive", unit: "кг", price: 95, note: "Белый пигмент, UV-стойкость." },
+      { name: "Цитронелла масло", cat: "additive", unit: "л", price: 450, note: "Anti-Mosquito, обычно 2–3%." },
+      { name: "Масло нима", cat: "additive", unit: "л", price: 380, note: "Anti-Mosquito, обычно 1–2%." },
+      { name: "Стеариновая кислота", cat: "additive", unit: "кг", price: 75, note: "Твёрдость, снижение кристаллизации." },
+      { name: "UV-стабилизатор", cat: "additive", unit: "кг", price: 520, note: "Для retail / окна." },
+      { name: "Пластификатор", cat: "additive", unit: "кг", price: 65, note: "Гибкость кашпо." },
+      { name: "Гидрофобизатор", cat: "additive", unit: "л", price: 140, note: "Водоотталкивание поверхности." },
+
+      { name: "Carbon Black", cat: "dye", unit: "кг", price: 110, note: "Чёрный пигмент, 0.5–2%." },
+      { name: "Оксид железа красный", cat: "dye", unit: "кг", price: 85, note: "Кирпич / охра." },
+      { name: "Оксид хрома зелёный", cat: "dye", unit: "кг", price: 150, note: "Камуфляж." },
+      { name: "Ультрамарин", cat: "dye", unit: "кг", price: 130, note: "Синий, 0.3–1%." },
+      { name: "Охра жёлтая", cat: "dye", unit: "кг", price: 65, note: "Натуральные тона." },
+      { name: "Светонакопительный пигмент", cat: "dye", unit: "кг", price: 850, note: "Glow, 3–5%." },
+
+      { name: "Аромат \"Східний Вал\"", cat: "fragrance", unit: "л", price: 680, note: "Premium, 5–7%." },
+      { name: "Аромат \"Карпатський Рейд\"", cat: "fragrance", unit: "л", price: 720, note: "Хвоя / мох, 5–7%." },
+      { name: "Лаванда эфирная", cat: "fragrance", unit: "л", price: 550, note: "3–5%." },
+      { name: "Ваниль ароматизатор", cat: "fragrance", unit: "л", price: 320, note: "4–6%." },
+      { name: "Без аромата", cat: "fragrance", unit: "л", price: 0, note: "Для фронта / нейтральные изделия." },
+
+      { name: "Фитиль хлопок Ø3 мм", cat: "wick", unit: "м", price: 12, note: "Стандарт." },
+      { name: "Фитиль AMSR v2.2 хлопок+стекло", cat: "wick", unit: "м", price: 28, note: "Гейзерные свечи." },
+      { name: "Фитиль деревянный", cat: "wick", unit: "шт", price: 8, note: "Крафт, эффект потрескивания." },
+      { name: "Фитиль Ø5 мм усиленный", cat: "wick", unit: "м", price: 18, note: "Большие диаметры." },
+
+      { name: "Стеклосетка 5×5 мм", cat: "packaging", unit: "м", price: 35, note: "Армирование кашпо." },
+      { name: "Базальтовое волокно", cat: "packaging", unit: "кг", price: 220, note: "Огнестойкое армирование." },
+      { name: "Фибра полипропиленовая 12 мм", cat: "packaging", unit: "кг", price: 145, note: "Кашпо, трещиностойкость." },
+      { name: "Стакан / банка 200 мл", cat: "packaging", unit: "шт", price: 9, note: "Тара под свечу." },
+      { name: "Крышка / декор", cat: "packaging", unit: "шт", price: 4, note: "Финиш." },
+      { name: "Этикетка MZG", cat: "packaging", unit: "шт", price: 2.5, note: "Маркировка." },
+      { name: "Дой-пак 100 мл", cat: "packaging", unit: "шт", price: 6, note: "MZG-WASH / концентраты." }
+    ];
+
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, DB_VER);
+
+        req.onupgradeneeded = (e) => {
+          const d = e.target.result;
+          if (!d.objectStoreNames.contains("materials")) {
+            d.createObjectStore("materials", { keyPath: "id", autoIncrement: true });
+          }
+          if (!d.objectStoreNames.contains("recipes")) {
+            d.createObjectStore("recipes", { keyPath: "id", autoIncrement: true });
+          }
+          if (!d.objectStoreNames.contains("settings")) {
+            d.createObjectStore("settings", { keyPath: "key" });
+          }
+        };
+
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function dbGetAll(store) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(store, "readonly");
+        const req = tx.objectStore(store).getAll();
+        req.onsuccess = () => resolve(req.result || []);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function dbGet(store, key) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(store, "readonly");
+        const req = tx.objectStore(store).get(key);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function dbPut(store, value) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(store, "readwrite");
+        const req = tx.objectStore(store).put(value);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function dbDelete(store, key) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(store, "readwrite");
+        const req = tx.objectStore(store).delete(key);
+        req.onsuccess = () => resolve(true);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function dbClear(store) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(store, "readwrite");
+        const req = tx.objectStore(store).clear();
+        req.onsuccess = () => resolve(true);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function init() {
+      db = await openDB();
+
+      materials = await dbGetAll("materials");
+      if (materials.length === 0) {
+        for (const m of DEFAULT_MATERIALS) await dbPut("materials", m);
+        materials = await dbGetAll("materials");
+      }
+
+      recipes = await dbGetAll("recipes");
+
+      const s = await dbGet("settings", "main");
+      if (s) settings = { ...settings, ...s };
+
+      buildCategorySelects();
+      applySettings();
+      document.getElementById("wastePct").value = settings.waste;
+      renderAll();
+      registerSW();
+    }
+
+    function buildCategorySelects() {
+      const filter = document.getElementById("matFilter");
+      const newCat = document.getElementById("newMatCat");
+
+      filter.innerHTML = `<option value="">Все категории</option>` +
+        Object.entries(CATS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("");
+
+      newCat.innerHTML = Object.entries(CATS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("");
+    }
+
+    function applySettings() {
+      document.getElementById("setWaste").value = settings.waste;
+      document.getElementById("setEnergy").value = settings.energy;
+      document.getElementById("setLabor").value = settings.labor;
+      document.getElementById("setQcFee").value = settings.qcFee;
+      document.getElementById("setRoyalty").value = settings.royalty;
+    }
+
+    function showTab(name) {
+      document.querySelectorAll(".tab").forEach(t => {
+        t.classList.toggle("active", t.id === "tab-" + name);
+      });
+
+      document.querySelectorAll("nav button").forEach(b => {
+        b.classList.toggle("active", b.dataset.tab === name);
+      });
+
+      if (name === "recipes") renderRecipes();
+      if (name === "materials") renderMaterials();
+      if (name === "calc") renderMaterialSelect();
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function toast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.style.display = "block";
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => t.style.display = "none", 2600);
+    }
+
+    function getMaterialById(id) {
+      return materials.find(m => m.id === Number(id));
+    }
+
+    function isBulkUnit(unit) {
+      return BULK_UNITS.includes(unit);
+    }
+
+    function pricePerGram(mat) {
+      if (!mat) return 0;
+      if (mat.unit === "кг" || mat.unit === "л") return mat.price / 1000;
+      if (mat.unit === "г" || mat.unit === "мл") return mat.price;
+      return 0;
+    }
+
+    function renderAll() {
+      renderMaterialSelect();
+      renderMaterials();
+      renderComponents();
+      renderRecipes();
+    }
+
+    function renderMaterialSelect() {
+      const sel = document.getElementById("calcMaterial");
+      const grouped = {};
+
+      materials.forEach(m => {
+        grouped[m.cat] = grouped[m.cat] || [];
+        grouped[m.cat].push(m);
+      });
+
+      sel.innerHTML = Object.keys(CATS)
+        .filter(cat => grouped[cat]?.length)
+        .map(cat => {
+          const opts = grouped[cat]
+            .map(m => `<option value="${m.id}">${escapeHtml(m.name)} · ${m.price} грн/${m.unit}</option>`)
+            .join("");
+          return `<optgroup label="${CATS[cat]}">${opts}</optgroup>`;
+        })
+        .join("");
+
+      updateComponentMode();
+    }
+
+    function updateComponentMode() {
+      const mat = getMaterialById(document.getElementById("calcMaterial").value);
+      const modeSel = document.getElementById("compMode");
+      const valInput = document.getElementById("compValue");
+
+      const percentOpt = modeSel.querySelector('option[value="percent"]');
+      const perItemOpt = modeSel.querySelector('option[value="perItem"]');
+
+      if (!mat) {
+        percentOpt.disabled = false;
+        perItemOpt.disabled = false;
+        return;
+      }
+
+      const bulk = isBulkUnit(mat.unit);
+      percentOpt.disabled = !bulk;
+
+      if (!bulk) {
+        modeSel.value = "perItem";
+        valInput.placeholder = "Например: 1 шт или 0.2 м";
+        valInput.step = "0.01";
+      } else {
+        if (modeSel.value === "perItem" && !bulk) modeSel.value = "percent";
+        if (!modeSel.value) modeSel.value = "percent";
+        valInput.placeholder = "Например: 6.5";
+        valInput.step = "0.1";
+      }
+    }
+
+    function addComponent() {
+      const matId = Number(document.getElementById("calcMaterial").value);
+      const mode = document.getElementById("compMode").value;
+      const value = parseFloat(document.getElementById("compValue").value);
+
+      const mat = getMaterialById(matId);
+      if (!mat) return toast("Выбери материал");
+      if (!Number.isFinite(value) || value <= 0) return toast("Введи положительное значение");
+
+      if (mode === "percent" && !isBulkUnit(mat.unit)) {
+        return toast("Для шт/м используй режим «на изделие»");
+      }
+
+      const existing = currentComponents.find(c => c.materialId === mat.id && c.mode === mode);
+      if (existing) {
+        existing.value += value;
+      } else {
+        currentComponents.push({
+          materialId: mat.id,
+          name: mat.name,
+          unit: mat.unit,
+          price: mat.price,
+          cat: mat.cat,
+          mode,
+          value
+        });
+      }
+
+      document.getElementById("compValue").value = mode === "percent" ? 10 : 1;
+      renderComponents();
+      toast("Компонент добавлен");
+    }
+
+    function updateComponent(index, value) {
+      const v = parseFloat(value);
+      currentComponents[index].value = Number.isFinite(v) && v >= 0 ? v : 0;
+      renderComponents();
+    }
+
+    function removeComponent(index) {
+      currentComponents.splice(index, 1);
+      renderComponents();
+    }
+
+    function calcPieces() {
+      const batch = parseFloat(document.getElementById("batchMass").value) || 0;
+      const item = parseFloat(document.getElementById("itemWeight").value) || 0;
+      const wasteRaw = parseFloat(document.getElementById("wastePct").value);
+      const waste = Number.isFinite(wasteRaw) ? wasteRaw : settings.waste;
+
+      if (batch <= 0) return 0;
+      const useful = batch * Math.max(0, 1 - waste / 100);
+
+      if (item <= 0) return 1;
+      return Math.max(0, Math.floor(useful / item));
+    }
+
+    function renderComponents() {
+      const el = document.getElementById("componentList");
+      const totalEl = document.getElementById("totalPercent");
+
+      if (!currentComponents.length) {
+        el.innerHTML = `<div class="empty">Компоненты не добавлены</div>`;
+        totalEl.innerHTML = "";
+        document.getElementById("resultBox").style.display = "none";
+        return;
+      }
+
+      const batch = parseFloat(document.getElementById("batchMass").value) || 0;
+      const pieces = calcPieces();
+      let totalPercent = 0;
+
+      const rows = currentComponents.map((c, i) => {
+        const mat = getMaterialById(c.materialId) || c;
+        let detail = "";
+
+        if (c.mode === "percent") {
+          totalPercent += c.value;
+          const mass = batch * c.value / 100;
+          const cost = mass * pricePerGram(mat);
+          detail = `${mass.toFixed(1)} г · ${cost.toFixed(2)} грн`;
+        } else {
+          const costItem = c.value * mat.price;
+          const costBatch = costItem * pieces;
+          detail = `${costItem.toFixed(2)} грн/шт · партия ${costBatch.toFixed(2)} грн`;
+        }
+
+        return `
+          <tr>
+            <td>
+              <b>${escapeHtml(c.name)}</b><br />
+              <span class="small">${CATS[c.cat] || c.cat} · ${mat.price} грн/${mat.unit}</span>
+            </td>
+            <td>${c.mode === "percent" ? "%" : "шт/м"}</td>
+            <td>
+              <input type="number" min="0" step="${c.mode === "percent" ? "0.1" : "0.01"}"
+                value="${c.value}" onchange="updateComponent(${i}, this.value)" />
+            </td>
+            <td class="small">${detail}</td>
+            <td><button class="del" onclick="removeComponent(${i})">×</button></td>
+          </tr>
+        `;
+      }).join("");
+
+      el.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Материал</th>
+              <th>Режим</th>
+              <th>Значение</th>
+              <th>Расход</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+
+      const cls = totalPercent > 100.5 ? "error" : Math.abs(totalPercent - 100) <= 0.5 ? "ok" : "warn";
+      const hint = totalPercent > 100.5 ? "превышение" : totalPercent < 99.5 ? "неполно" : "норма";
+      totalEl.innerHTML = `Массовые компоненты: <b class="${cls}">${totalPercent.toFixed(2)}%</b> · ${hint}`;
+    }
+
+    function normalizePercent() {
+      const percentItems = currentComponents.filter(c => c.mode === "percent");
+      const sum = percentItems.reduce((s, c) => s + c.value, 0);
+
+      if (sum <= 0) return toast("Нет %-компонентов");
+      const factor = 100 / sum;
+
+      percentItems.forEach(c => {
+        c.value = Number((c.value * factor).toFixed(3));
+      });
+
+      renderComponents();
+      toast("Проценты нормализованы к 100%");
+    }
+
+    function calculateBatch() {
+      if (!currentComponents.length) return toast("Добавь компоненты");
+
+      const batch = parseFloat(document.getElementById("batchMass").value) || 0;
+      if (batch <= 0) return toast("Укажи массу партии");
+
+      const itemWeight = parseFloat(document.getElementById("itemWeight").value) || 0;
+      const wasteRaw = parseFloat(document.getElementById("wastePct").value);
+      const waste = Number.isFinite(wasteRaw) ? wasteRaw : settings.waste;
+
+      const pieces = calcPieces();
+      const usefulMass = batch * Math.max(0, 1 - waste / 100);
+
+      let totalPercent = 0;
+      let bulkCost = 0;
+      let consumableCostPerItem = 0;
+
+      const lines = currentComponents.map(c => {
+        const mat = getMaterialById(c.materialId) || c;
+
+        if (c.mode === "percent") {
+          totalPercent += c.value;
+          const mass = batch * c.value / 100;
+          const cost = mass * pricePerGram(mat);
+          bulkCost += cost;
+          return `
+            <div class="result-row">
+              <span>${escapeHtml(c.name)} · ${c.value}%</span>
+              <span class="val">${mass.toFixed(1)} г · ${cost.toFixed(2)} грн</span>
+            </div>
+          `;
+        } else {
+          const costItem = c.value * mat.price;
+          consumableCostPerItem += costItem;
+          const costBatch = costItem * pieces;
+          return `
+            <div class="result-row">
+              <span>${escapeHtml(c.name)} · ${c.value} ${mat.unit}/шт</span>
+              <span class="val">${costItem.toFixed(2)} грн/шт · ${costBatch.toFixed(2)} грн</span>
+            </div>
+          `;
+        }
+      }).join("");
+
+      if (totalPercent > 100.5) {
+        return toast("Сумма % больше 100. Исправь состав.");
+      }
+
+      const consumableBatchCost = consumableCostPerItem * pieces;
+      const rawCost = bulkCost + consumableBatchCost;
+
+      const energy = parseFloat(document.getElementById("setEnergy").value) || settings.energy;
+      const labor = parseFloat(document.getElementById("setLabor").value) || settings.labor;
+      const qcFee = parseFloat(document.getElementById("setQcFee").value) || settings.qcFee;
+      const royaltyPct = parseFloat(document.getElementById("setRoyalty").value) || settings.royalty;
+
+      const qcBatch = qcFee * pieces;
+      const overhead = energy + labor + qcBatch;
+      const royalty = rawCost * royaltyPct / 100;
+      const cogs = rawCost + overhead + royalty;
+      const costPerItem = pieces > 0 ? cogs / pieces : 0;
+
+      const percentStatus = totalPercent > 100.5
+        ? `<span class="error">Состав превышает 100%</span>`
+        : totalPercent < 99.5
+          ? `<span class="warn">Состав меньше 100%: ${totalPercent.toFixed(2)}%</span>`
+          : `<span class="ok">Состав ≈ 100%</span>`;
+
+      document.getElementById("resultContent").innerHTML = `
+        ${lines}
+        <hr style="border-color:#333;margin:8px 0" />
+        <div class="result-row"><span>Полезная масса после потерь</span><span class="val">${usefulMass.toFixed(1)} г</span></div>
+        <div class="result-row"><span>Изделий</span><span class="val">${pieces}</span></div>
+        <div class="result-row"><span>Себестоимость сырья</span><span class="val">${rawCost.toFixed(2)} грн</span></div>
+        <div class="result-row"><span>Энергия + труд + QC</span><span class="val">${overhead.toFixed(2)} грн</span></div>
+        <div class="result-row"><span>Роялти ${royaltyPct}%</span><span class="val">${royalty.toFixed(2)} грн</span></div>
+        <div class="result-row" style="font-size:14px"><span><b>COGS партии</b></span><span class="val" style="color:var(--accent)">${cogs.toFixed(2)} грн</span></div>
+        <div class="result-row"><span>COGS на изделие</span><span class="val">${pieces > 0 ? costPerItem.toFixed(2) + " грн" : "—"}</span></div>
+        <div class="result-row"><span>${percentStatus}</span><span></span></div>
+      `;
+
+      document.getElementById("resultBox").style.display = "block";
+      toast("Расчёт выполнен");
+    }
+
+    function clearRecipe() {
+      currentRecipeId = null;
+      currentComponents = [];
+      document.getElementById("recipeName").value = "";
+      document.getElementById("productType").value = "candle";
+      document.getElementById("batchMass").value = 1000;
+      document.getElementById("itemWeight").value = 100;
+      document.getElementById("wastePct").value = settings.waste;
+      document.getElementById("recipeNotes").value = "";
+      document.getElementById("resultBox").style.display = "none";
+      renderComponents();
+      toast("Новая рецептура");
+    }
+
+    async function saveRecipe() {
+      const name = document.getElementById("recipeName").value.trim();
+      if (!name) return toast("Введи название рецепта");
+      if (!currentComponents.length) return toast("Добавь компоненты");
+
+      const payload = {
+        name,
+        type: document.getElementById("productType").value,
+        batch: parseFloat(document.getElementById("batchMass").value) || 0,
+        itemWeight: parseFloat(document.getElementById("itemWeight").value) || 0,
+        waste: parseFloat(document.getElementById("wastePct").value) || settings.waste,
+        notes: document.getElementById("recipeNotes").value.trim(),
+        components: JSON.parse(JSON.stringify(currentComponents)),
+        updatedAt: new Date().toISOString()
+      };
+
+      if (currentRecipeId) payload.id = currentRecipeId;
+      else payload.createdAt = payload.updatedAt;
+
+      const key = await dbPut("recipes", payload);
+      if (!currentRecipeId) currentRecipeId = key;
+
+      recipes = await dbGetAll("recipes");
+      renderRecipes();
+      toast("Рецепт сохранен");
+    }
+
+    function renderRecipes() {
+      const el = document.getElementById("recipeList");
+
+      if (!recipes.length) {
+        el.innerHTML = `<div class="empty">Нет сохраненных рецептов</div>`;
+        return;
+      }
+
+      const typeNames = {
+        candle: "Свеча",
+        planter: "Кашпо",
+        hybrid: "Гейзер / гибрид",
+        other: "Другое"
+      };
+
+      const sorted = [...recipes].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+      el.innerHTML = sorted.map(r => {
+        const d = new Date(r.updatedAt).toLocaleString("ru-RU");
+        const compSummary = r.components.slice(0, 5).map(c => `${c.name}: ${c.mode === "percent" ? c.value + "%" : c.value + " шт/м"}`).join(" · ");
+        const more = r.components.length > 5 ? ` · ещё ${r.components.length - 5}` : "";
+
+        return `
+          <div class="card recipe-card">
+            <div class="recipe-head">
+              <div>
+                <b style="color:var(--accent)">${escapeHtml(r.name)}</b><br />
+                <span class="small">${typeNames[r.type] || r.type} · ${r.batch} г · ${d}</span>
+              </div>
+              <div class="recipe-actions">
+                <button class="btn sm blue" onclick="loadRecipe(${r.id})">Загрузить</button>
+                <button class="btn sm" onclick="duplicateRecipe(${r.id})">Копия</button>
+                <button class="btn sm red" onclick="deleteRecipe(${r.id})">Удалить</button>
+              </div>
+            </div>
+            <div class="small" style="margin-top:8px">${escapeHtml(compSummary)}${more}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function loadRecipe(id) {
+      const r = recipes.find(x => x.id === id);
+      if (!r) return;
+
+      currentRecipeId = r.id;
+      currentComponents = JSON.parse(JSON.stringify(r.components || []));
+
+      document.getElementById("recipeName").value = r.name || "";
+      document.getElementById("productType").value = r.type || "candle";
+      document.getElementById("batchMass").value = r.batch || 1000;
+      document.getElementById("itemWeight").value = r.itemWeight || 0;
+      document.getElementById("wastePct").value = r.waste ?? settings.waste;
+      document.getElementById("recipeNotes").value = r.notes || "";
+
+      renderComponents();
+      showTab("calc");
+      toast("Рецепт загружен");
+    }
+
+    async function duplicateRecipe(id) {
+      const r = recipes.find(x => x.id === id);
+      if (!r) return;
+
+      const payload = {
+        ...r,
+        id: undefined,
+        name: r.name + " (копия)",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        components: JSON.parse(JSON.stringify(r.components || []))
+      };
+
+      await dbPut("recipes", payload);
+      recipes = await dbGetAll("recipes");
+      renderRecipes();
+      toast("Копия создана");
+    }
+
+    async function deleteRecipe(id) {
+      if (!confirm("Удалить рецепт?")) return;
+      await dbDelete("recipes", id);
+      recipes = await dbGetAll("recipes");
+      if (currentRecipeId === id) currentRecipeId = null;
+      renderRecipes();
+      toast("Рецепт удален");
+    }
+
+    function renderMaterials() {
+      const q = document.getElementById("matSearch").value.toLowerCase().trim();
+      const cat = document.getElementById("matFilter").value;
+
+      const filtered = materials.filter(m => {
+        const hay = `${m.name} ${m.note || ""} ${CATS[m.cat] || m.cat}`.toLowerCase();
+        return (!q || hay.includes(q)) && (!cat || m.cat === cat);
+      });
+
+      document.getElementById("matCount").textContent = materials.length;
+
+      const el = document.getElementById("materialList");
+      if (!filtered.length) {
+        el.innerHTML = `<div class="empty">Не найдено</div>`;
+        return;
+      }
+
+      el.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Материал</th>
+              <th>Категория</th>
+              <th>Цена</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filtered.map(m => `
+              <tr>
+                <td>
+                  <b>${escapeHtml(m.name)}</b><br />
+                  <span class="small">${escapeHtml(m.note || "")}</span>
+                </td>
+                <td><span class="badge ${m.cat}">${CATS[m.cat] || m.cat}</span></td>
+                <td>${m.price} грн/${m.unit}</td>
+                <td style="white-space:nowrap">
+                  <button class="btn sm blue" onclick="editMaterial(${m.id})">Изм.</button>
+                  <button class="del" onclick="deleteMaterial(${m.id})">×</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function saveMaterial() {
+      const name = document.getElementById("newMatName").value.trim();
+      if (!name) return toast("Введи название материала");
+
+      const payload = {
+        name,
+        cat: document.getElementById("newMatCat").value,
+        unit: document.getElementById("newMatUnit").value,
+        price: parseFloat(document.getElementById("newMatPrice").value) || 0,
+        note: document.getElementById("newMatNote").value.trim()
+      };
+
+      const editingId = document.getElementById("editingMaterialId").value;
+      if (editingId) payload.id = Number(editingId);
+
+      dbPut("materials", payload).then(async () => {
+        materials = await dbGetAll("materials");
+        cancelEditMaterial();
+        renderAll();
+        toast(editingId ? "Материал обновлен" : "Материал добавлен");
+      });
+    }
+
+    function editMaterial(id) {
+      const m = getMaterialById(id);
+      if (!m) return;
+
+      document.getElementById("editingMaterialId").value = m.id;
+      document.getElementById("newMatName").value = m.name;
+      document.getElementById("newMatCat").value = m.cat;
+      document.getElementById("newMatUnit").value = m.unit;
+      document.getElementById("newMatPrice").value = m.price;
+      document.getElementById("newMatNote").value = m.note || "";
+      document.getElementById("matFormTitle").textContent = "Редактирование материала";
+      showTab("materials");
+    }
+
+    function cancelEditMaterial() {
+      document.getElementById("editingMaterialId").value = "";
+      document.getElementById("newMatName").value = "";
+      document.getElementById("newMatCat").value = "wax";
+      document.getElementById("newMatUnit").value = "кг";
+      document.getElementById("newMatPrice").value = 0;
+      document.getElementById("newMatNote").value = "";
+      document.getElementById("matFormTitle").textContent = "Новый материал";
+    }
+
+    async function deleteMaterial(id) {
+      if (!confirm("Удалить материал? Сохраненные рецепты останутся с историческими данными.")) return;
+      await dbDelete("materials", id);
+      materials = await dbGetAll("materials");
+      renderAll();
+      toast("Материал удален");
+    }
+
+    async function saveSettings() {
+      settings = {
+        waste: parseFloat(document.getElementById("setWaste").value) || 0,
+        energy: parseFloat(document.getElementById("setEnergy").value) || 0,
+        labor: parseFloat(document.getElementById("setLabor").value) || 0,
+        qcFee: parseFloat(document.getElementById("setQcFee").value) || 0,
+        royalty: parseFloat(document.getElementById("setRoyalty").value) || 0
+      };
+
+      await dbPut("settings", { key: "main", ...settings });
+      document.getElementById("wastePct").value = settings.waste;
+      renderComponents();
+      toast("Настройки сохранены");
+    }
+
+    async function exportAll() {
+      const data = {
+        app: "MZG-Craft-Calc",
+        version: "1.0",
+        exportedAt: new Date().toISOString(),
+        materials: await dbGetAll("materials"),
+        recipes: await dbGetAll("recipes"),
+        settings
+      };
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `MZG_Craft_Calc_${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      toast("Экспорт готов");
+    }
+
+    async function importAll(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+
+        if (!Array.isArray(data.materials)) throw new Error("Неверный формат");
+
+        await dbClear("materials");
+        await dbClear("recipes");
+
+        for (const m of data.materials) await dbPut("materials", m);
+        if (Array.isArray(data.recipes)) {
+          for (const r of data.recipes) await dbPut("recipes", r);
+        }
+
+        if (data.settings) {
+          settings = data.settings;
+          await dbPut("settings", { key: "main", ...settings });
+          applySettings();
+        }
+
+        materials = await dbGetAll("materials");
+        recipes = await dbGetAll("recipes");
+        currentComponents = [];
+        currentRecipeId = null;
+        renderAll();
+        toast("Импорт завершен");
+      } catch (err) {
+        toast("Ошибка импорта: " + err.message);
+      }
+
+      event.target.value = "";
+    }
+
+    async function resetDB() {
+      if (!confirm("Сбросить базу? Будут удалены все пользовательские материалы и рецепты.")) return;
+      if (!confirm("Точно? Сделай экспорт перед сбросом.")) return;
+
+      await dbClear("materials");
+      await dbClear("recipes");
+      await dbClear("settings");
+
+      for (const m of DEFAULT_MATERIALS) await dbPut("materials", m);
+
+      materials = await dbGetAll("materials");
+      recipes = [];
+      currentComponents = [];
+      currentRecipeId = null;
+
+      settings = { waste: 5, energy: 0, labor: 0, qcFee: 0.35, royalty: 15 };
+      await dbPut("settings", { key: "main", ...settings });
+
+      applySettings();
+      document.getElementById("wastePct").value = settings.waste;
+      renderAll();
+      toast("База сброшена");
+    }
+
+    async function registerSW() {
+      if (!("serviceWorker" in navigator)) return;
+
+      if (location.protocol === "file:") {
+        toast("Для установки открой через HTTPS или localhost");
+        return;
+      }
+
+      try {
+        const reg = await navigator.serviceWorker.register("./sw.js");
+
+        if (reg.waiting) {
+          reg.waiting.postMessage({ type: "SKIP_WAITING" });
+        }
+
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
+          if (window.__swRefreshing) return;
+          window.__swRefreshing = true;
+          location.reload();
+        });
+      } catch (err) {
+        console.warn("SW registration failed:", err);
+      }
+    }
+
+    init().catch(err => {
+      console.error(err);
+      toast("Ошибка инициализации: " + err.message);
+    });
+  </script>
+</body>
+</html>

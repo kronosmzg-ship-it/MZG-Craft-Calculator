@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="72" fill="#111111"/>
+  <circle cx="256" cy="190" r="82" fill="none" stroke="#c8a84e" stroke-width="18"/>
+  <path d="M256 108 V64" stroke="#c8a84e" stroke-width="18" stroke-linecap="round"/>
+  <rect x="184" y="286" width="144" height="128" rx="18" fill="#1a1a1a" stroke="#c8a84e" stroke-width="12"/>
+  <text x="256" y="366" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="52" fill="#c8a84e">MZG</text>
+</svg>

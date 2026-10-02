@@ -1,0 +1,20 @@
+{
+  "name": "MZG Craft Calculator",
+  "short_name": "MZG Calc",
+  "description": "Калькулятор рецептур для малых партий: свечи, кашпо, гейзерные модули.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#111111",
+  "theme_color": "#111111",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
