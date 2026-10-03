@@ -5,58 +5,75 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#111111">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>MZG Craft Calc v1.2</title>
+<title>Emzedgi Craft Calc v1.3</title>
 <link rel="manifest" href="manifest.webmanifest">
 <style>
-:root{--bg:#111;--panel:#1a1a1a;--panel2:#0d0d0d;--bd:#333;--ac:#c8a84e;--tx:#e0e0e0;--dim:#777;--gr:#2e7d32;--rd:#b71c1c;--bl:#1565c0;--or:#e65100}
+:root{--bg:#111;--pn:#1a1a1a;--p2:#0d0d0d;--bd:#333;--ac:#c8a84e;--tx:#e0e0e0;--dm:#777;--gr:#2e7d32;--rd:#b71c1c;--bl:#1565c0;--or:#e65100;--pk:#ad1457}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:"Courier New",monospace;background:var(--bg);color:var(--tx);font-size:14px;min-height:100vh;overflow-x:hidden}
-header{position:sticky;top:0;z-index:100;background:var(--panel);border-bottom:2px solid var(--ac);padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+header{position:sticky;top:0;z-index:100;background:var(--pn);border-bottom:2px solid var(--ac);padding:8px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.logo{display:flex;align-items:center;gap:8px}
+.logo svg{width:30px;height:30px;flex:0 0 auto}
 header h1{font-size:15px;letter-spacing:1.5px;color:var(--ac)}
-.sub{font-size:10px;color:var(--dim)}
-nav{position:sticky;top:47px;z-index:99;display:flex;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--bd);overflow-x:auto}
-nav button{flex:0 0 auto;background:transparent;border:1px solid var(--bd);color:var(--dim);font-family:inherit;font-size:12px;padding:9px 12px;border-radius:2px;cursor:pointer}
+.sub{font-size:10px;color:var(--dm)}
+nav{position:sticky;top:46px;z-index:99;display:flex;gap:4px;padding:8px;background:var(--pn);border-bottom:1px solid var(--bd);overflow-x:auto}
+nav button{flex:0 0 auto;background:transparent;border:1px solid var(--bd);color:var(--dm);font-family:inherit;font-size:12px;padding:9px 12px;border-radius:2px;cursor:pointer}
 nav button.active{color:var(--ac);border-color:var(--ac);background:#1f1f1f}
 .tab{display:none;padding:12px}.tab.active{display:block}
-.card{background:var(--panel);border:1px solid var(--bd);border-radius:4px;padding:12px;margin-bottom:10px}
+.card{background:var(--pn);border:1px solid var(--bd);border-radius:4px;padding:12px;margin-bottom:10px}
 .card h3{font-size:13px;color:var(--ac);border-bottom:1px solid var(--bd);padding-bottom:5px;margin-bottom:8px}
-label{display:block;font-size:11px;color:var(--dim);margin:7px 0 3px}
-input,select,textarea{width:100%;background:var(--panel2);border:1px solid var(--bd);color:var(--tx);padding:9px;font-family:inherit;font-size:13px;border-radius:2px}
-textarea{min-height:54px;resize:vertical}
+label{display:block;font-size:11px;color:var(--dm);margin:7px 0 3px}
+input,select,textarea{width:100%;background:var(--p2);border:1px solid var(--bd);color:var(--tx);padding:9px;font-family:inherit;font-size:13px;border-radius:2px}
+textarea{min-height:50px;resize:vertical}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ac)}
 .row{display:flex;gap:8px;align-items:end}.row>*{flex:1}
-.btn{width:100%;margin-top:8px;border:none;background:var(--ac);color:#000;font-family:inherit;font-size:12px;font-weight:bold;letter-spacing:1px;padding:10px 12px;border-radius:2px;cursor:pointer}
+.btn{width:100%;margin-top:8px;border:none;background:var(--ac);color:#000;font-family:inherit;font-size:12px;font-weight:bold;letter-spacing:1px;padding:10px;border-radius:2px;cursor:pointer}
 .btn:active{opacity:.82}.btn.gr{background:var(--gr);color:#fff}.btn.bl{background:var(--bl);color:#fff}.btn.rd{background:var(--rd);color:#fff}.btn.gy{background:#333;color:var(--tx)}
 .btn.sm{width:auto;margin:0;padding:7px 10px;font-size:11px}
-.seg{display:flex;gap:4px;margin-bottom:8px}
-.seg button{flex:1;background:var(--panel2);border:1px solid var(--bd);color:var(--dim);font-family:inherit;font-size:12px;padding:8px;border-radius:2px;cursor:pointer}
+.seg{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap}
+.seg button{flex:1;min-width:90px;background:var(--p2);border:1px solid var(--bd);color:var(--dm);font-family:inherit;font-size:12px;padding:8px;border-radius:2px;cursor:pointer}
 .seg button.on{color:#000;background:var(--ac);border-color:var(--ac);font-weight:bold}
+.seg button.em.on{background:var(--pk);color:#fff;border-color:var(--pk)}
 .presets{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
-.presets button{background:var(--panel2);border:1px solid var(--bd);color:var(--tx);font-family:inherit;font-size:11px;padding:6px 8px;border-radius:2px;cursor:pointer}
+.presets button{background:var(--p2);border:1px solid var(--bd);color:var(--tx);font-family:inherit;font-size:11px;padding:6px 8px;border-radius:2px;cursor:pointer}
 .presets button:active{border-color:var(--ac);color:var(--ac)}
 table{width:100%;border-collapse:collapse;font-size:12px}
 th{text-align:left;color:var(--ac);border-bottom:1px solid var(--bd);padding:6px 4px;white-space:nowrap}
 td{padding:6px 4px;border-bottom:1px solid #222;vertical-align:middle}
 td input{padding:6px;font-size:12px}
 .badge{display:inline-block;padding:2px 6px;border-radius:2px;font-size:10px;font-weight:bold;color:#fff;white-space:nowrap}
-.b-wax{background:#5d4037}.b-filler{background:#33691e}.b-binder{background:#4a148c}.b-additive{background:#01579b}.b-dye{background:#880e4f}.b-fragrance{background:#1b5e20}.b-wick{background:var(--or)}.b-packaging{background:#37474f}.b-base{background:#00695c}.b-vessel{background:#455a64}.b-stick{background:#6d4c41}.b-decor{background:#ad1457}.b-body{background:#3e2723}
+.b-wax{background:#5d4037}.b-filler{background:#33691e}.b-binder{background:#4a148c}.b-additive{background:#01579b}.b-dye{background:#880e4f}.b-fragrance{background:#1b5e20}.b-wick{background:var(--or)}.b-packaging{background:#37474f}.b-base{background:#00695c}.b-vessel{background:#455a64}.b-stick{background:#6d4c41}.b-decor{background:var(--pk)}.b-body{background:#3e2723}.b-reinforce{background:#263238}
 .result-box{display:none;background:#0a0a0a;border:2px solid var(--ac);border-radius:4px;padding:12px;margin-top:10px}
 .result-box h4{color:var(--ac);margin-bottom:8px;font-size:13px}
 .rr{display:flex;justify-content:space-between;gap:10px;padding:3px 0;font-size:12px}
 .rr .v{color:#fff;font-weight:bold;text-align:right}
 .warn{color:var(--ac)}.err{color:var(--rd)}.ok{color:var(--gr)}
 .del{background:none;border:none;color:var(--rd);font-size:17px;cursor:pointer;padding:0 4px}
-.empty{color:var(--dim);font-style:italic;text-align:center;padding:14px}
-.small{font-size:11px;color:var(--dim)}
+.empty{color:var(--dm);font-style:italic;text-align:center;padding:14px}
+.small{font-size:11px;color:var(--dm)}
 .cav{border:1px dashed var(--bd);border-radius:4px;padding:8px;margin-bottom:8px;background:#0e0e0e}
 .cav-h{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--ac);margin-bottom:4px}
+.mlist{max-height:220px;overflow-y:auto;border:1px solid var(--bd);border-radius:4px;padding:4px;background:var(--p2)}
+.mlist .grp{font-size:10px;color:var(--ac);padding:4px 2px 2px;border-bottom:1px solid #222;margin-top:4px}
+.mlist .mi{display:flex;align-items:center;gap:6px;padding:4px 2px}
+.mlist .mi input[type=checkbox]{width:auto;flex:0 0 auto}
+.mlist .mi input[type=number]{width:64px;flex:0 0 auto;padding:4px}
+.mlist .mi span{flex:1;font-size:12px}
+.proc{background:#0a0a0a;border:1px solid var(--bd);border-radius:4px;padding:10px;margin-top:8px;font-size:12px}
+.proc ol{margin-left:18px}.proc li{padding:3px 0;border-bottom:1px solid #1c1c1c}
+.proc .ph{color:var(--ac)}
 .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--gr);color:#fff;padding:10px 16px;border-radius:4px;font-size:12px;z-index:999;display:none;max-width:92vw;text-align:center}
 @media(min-width:700px){.tab{max-width:760px;margin:0 auto}}
 </style>
 </head>
 <body>
-<header><div><h1>MZG CRAFT CALC</h1><div class="sub">v1.2 · геометрия · стек слоёв · MZX-база</div></div><div class="sub">IndexedDB · offline</div></header>
+<header>
+<div class="logo">
+<svg viewBox="0 0 64 64" aria-label="Emzedgi"><rect width="64" height="64" rx="12" fill="#111"/><rect x="24" y="30" width="16" height="24" rx="3" fill="none" stroke="#c8a84e" stroke-width="3"/><line x1="32" y1="30" x2="32" y2="20" stroke="#c8a84e" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="14" r="4" fill="#c8a84e"/></svg>
+<div><h1>EMZEDGI</h1><div class="sub">Craft Calc v1.3 · плантер → content · профиль бренда</div></div>
+</div>
+<div class="sub">IndexedDB · offline</div>
+</header>
 <nav>
 <button class="active" data-tab="calc" onclick="showTab('calc')">Калькулятор</button>
 <button data-tab="materials" onclick="showTab('materials')">Материалы</button>
@@ -66,38 +83,49 @@ td input{padding:6px;font-size:12px}
 
 <section id="tab-calc" class="tab active">
 <div class="card">
-<h3>Изделие</h3>
-<label>Название</label><input id="rName" placeholder="напр. Чайное кашпо 120/40/24">
+<h3>1. Плантер (лицо бренда)</h3>
+<label>Название рецепта</label><input id="rName" placeholder="напр. Кашпо премиум 70/120">
+<div class="seg">
+<button id="pfEm" class="em on" onclick="setProfile('emzedgi')">Emzedgi · премиум</button>
+<button id="pfOm" onclick="setProfile('omvi')">OMVi · средний</button>
+</div>
 <div class="seg">
 <button id="mMass" class="on" onclick="setMode('mass')">По массе</button>
 <button id="mGeom" onclick="setMode('geom')">По геометрии</button>
 </div>
 <div class="presets">
-<button onclick="preset('double')">Двойная свеча</button>
-<button onclick="preset('tea')">Кашпо чайное</button>
-<button onclick="preset('tablet')">Таблетка</button>
-<button onclick="preset('dbath')">Диффузор ванна</button>
-<button onclick="preset('dvessel')">Диффузор пузырёк</button>
-<button onclick="preset('combo')">Комбо свеча+диф</button>
-<button onclick="preset('sub')">Цоколь</button>
+<button onclick="preset('double')">🕯 Двойная свеча</button>
+<button onclick="preset('tea')">🪴 Кашпо чайное</button>
+<button onclick="preset('tablet')">🌿 Таблетка</button>
+<button onclick="preset('dbath')">💧 Диффузор ванна</button>
+<button onclick="preset('dvessel')">🫙 Диффузор пузырёк</button>
+<button onclick="preset('combo')">🔥 Комбо свеча+диф</button>
+<button onclick="preset('sub')">🧱 Цоколь</button>
 </div>
 <div id="massFields">
-<div class="row"><div><label>Тип</label><select id="pType"><option value="candle">Свеча</option><option value="planter">Кашпо</option><option value="hybrid">Гейзер</option><option value="diffuser">Диффузор</option><option value="other">Другое</option></select></div><div><label>Масса партии, г</label><input id="batch" type="number" min="1" value="1000"></div></div>
-<div class="row"><div><label>Масса 1 изделия, г</label><input id="itemW" type="number" min="0" value="100"></div><div><label>Потери, %</label><input id="waste" type="number" min="0" max="100" step="0.1" value="5"></div></div>
+<div class="row"><div><label>Тип content</label><select id="pType"><option value="wax">Свеча (воск)</option><option value="liquid">Диффузор (жидкость)</option><option value="plant">Растение / пусто</option><option value="other">Другое</option></select></div><div><label>Масса 1 изделия, г</label><input id="itemW" type="number" min="1" value="100"></div></div>
+<div class="row"><div><label>Кол-во изделий, шт</label><input id="qty" type="number" min="1" value="1"></div><div><label>Потери, %</label><input id="waste" type="number" min="0" max="100" step="0.1" value="5"></div></div>
 </div>
 <div id="geomFields" style="display:none">
-<div class="row"><div><label>Тип</label><select id="gType"><option value="planter">Кашпо</option><option value="tablet">Таблетка</option><option value="diffuser">Диффузор</option><option value="combo">Комбо</option><option value="sub">Цоколь</option></select></div><div><label>Кол-во изделий, шт</label><input id="gQty" type="number" min="1" value="1"></div></div>
+<div class="row"><div><label>Тип content</label><select id="gType"><option value="planter">Кашпо (полость под воск/жидкость)</option><option value="tablet">Таблетка</option><option value="diffuser">Диффузор</option><option value="combo">Комбо</option><option value="sub">Цоколь</option></select></div><div><label>Кол-во изделий, шт</label><input id="gQty" type="number" min="1" value="1"></div></div>
 <div class="row"><div><label>D наружный, мм</label><input id="gDout" type="number" min="0" value="70"></div><div><label>H общая, мм</label><input id="gH" type="number" min="0" value="120"></div></div>
-<label>Матрица тела</label><select id="gBody"></select>
+<label>Тип матрицы тела</label>
+<div class="seg"><button id="btMix" class="on" onclick="setBodyType('mix')">Гипс-раствор (разложение)</button><button id="btPre" onclick="setBodyType('premix')">Готовая смесь</button></div>
+<div id="mixBody">
+<div class="row"><div><label>Класс замеса</label><select id="mixClass" onchange="mixPreset()"><option value="std">Стандарт (W/C≈0.45)</option><option value="prem" selected>Премиум (W/C≈0.37)</option><option value="self">Саморастек (W/C≈0.30)</option></select></div><div><label>ρ раствора, г/см³</label><input id="mixRho" type="number" min="0" step="0.01" value="1.83"></div></div>
+<div class="row"><div><label>dose СВВ, %</label><input id="mixDose" type="number" min="0" step="0.01" value="0.3"></div><div><label>ρ затв. изделия, г/см³</label><input id="mixRhoC" type="number" min="0" step="0.01" value="1.30"></div></div>
+<div class="small">Замес: m_раств=V_тела×ρ_раствора; гипс=m/(1+W/C); вода=m−гипс; СВВ=гипс×dose%. W/C и ρ — калибровка замером [VERIFY].</div>
+</div>
+<div id="premixBody" style="display:none"><label>Матрица тела</label><select id="gBody"></select></div>
 <div class="row"><div><label>Core-Insert t стенки, мм</label><input id="gWall" type="number" min="0" value="0"></div><div style="flex:0 0 auto"><label>&nbsp;</label><button class="btn sm gy" onclick="coreApply()">Применить</button></div></div>
-<div class="small">Core-Insert: D выемки = D_out − 2·t (только цилиндр). 0 = ручной ввод.</div>
+<div class="small">Core-Insert: D выемки = D_out − 2·t (цилиндр). 0 = ручной ввод.</div>
 </div>
 <label>Примечание</label><textarea id="rNotes" placeholder="форма, t° заливки, полимеризация, QC, тест фитиля..."></textarea>
 <div class="row"><button class="btn gy" onclick="clearRecipe()">Новая</button><button class="btn bl" onclick="normalizePercent()">Норм. 100%</button></div>
 </div>
 
 <div class="card" id="cavCard" style="display:none">
-<h3>Выемки (полости) — каждая вычитается из тела</h3>
+<h3>2. Content — выемки (каждая вычитается из тела)</h3>
 <div id="cavList"></div>
 <button class="btn sm" onclick="addCavity()">+ Выемка</button>
 </div>
@@ -107,38 +135,39 @@ td input{padding:6px;font-size:12px}
 <div class="row"><div><label>Объём, мл</label><input id="rfMl" type="number" min="0" value="100"></div><div><label>% отдушки</label><input id="rfPct" type="number" min="0" max="100" step="0.5" value="25"></div></div>
 <label>База (MZX)</label><select id="rfBase"></select>
 <label>Отдушка</label><select id="rfFrag"></select>
-<div class="small">Подсказка-диапазон 20–30% [VERIFY_EXTERNAL]. База = 1 материал, раскладка А/Б/В вне калькулятора.</div>
+<div class="small" id="rfHint"></div>
 </div>
 
 <div class="card">
-<h3>Массовые компоненты (% от массы)</h3>
-<div class="row"><div style="flex:2"><label>Материал</label><select id="mSel"></select></div><div><label>%</label><input id="mVal" type="number" min="0.1" step="0.1" value="10"></div></div>
-<button class="btn sm" onclick="addMass()">+ Добавить</button>
+<h3>3. Массовые компоненты (% от массы изделия)</h3>
+<div class="mlist" id="massPicker"></div>
+<button class="btn sm" onclick="addSelected('mass')">+ Добавить выбранные</button>
 <div id="massList" style="margin-top:8px"></div>
 <div id="mTotal" class="small" style="text-align:right;margin-top:6px"></div>
 </div>
 
 <div class="card">
-<h3>Расходники на изделие (шт/м или г/мл)</h3>
-<div class="row"><div style="flex:2"><label>Материал</label><select id="cSel"></select></div><div><label>Кол-во</label><input id="cVal" type="number" min="0" step="0.01" value="1"></div></div>
-<button class="btn sm" onclick="addCons()">+ Добавить</button>
+<h3>4. Расходники на изделие (шт/м или г/мл)</h3>
+<div class="mlist" id="consPicker"></div>
+<button class="btn sm" onclick="addSelected('cons')">+ Добавить выбранные</button>
 <div id="consList" style="margin-top:8px"></div>
 </div>
 
 <button class="btn gr" onclick="calculate()">Рассчитать</button>
 <button class="btn bl" onclick="saveRecipe()">Сохранить рецепт</button>
 <div id="resultBox" class="result-box"><h4>Результат</h4><div id="resultContent"></div></div>
+<div id="procBox" class="proc" style="display:none"><h4 style="color:var(--ac);margin-bottom:6px">Технология (пошагово) <button class="btn sm gy" style="float:right" onclick="copyProcess()">Скопировать</button></h4><ol id="procList"></ol><div class="small" style="margin-top:6px">Порядок действий генерируется из рецепта. Значения <span class="ph">[VERIFY]</span> — калибруй замером/тестом, модель их не выдумывает.</div></div>
 </section>
 
 <section id="tab-materials" class="tab">
 <div class="card"><h3>Поиск</h3><div class="row"><div style="flex:2"><input id="mSearch" placeholder="название, категория, примечание..." oninput="renderMats()"></div><div><select id="mFilter" onchange="renderMats()"></select></div></div></div>
 <div class="card"><h3 id="mFormT">Новый материал</h3><input type="hidden" id="mEditId" value="">
-<label>Название</label><input id="nmName" placeholder="напр. Парафин П-2">
+<label>Название</label><input id="nmName" placeholder="напр. Фибра полипропиленовая">
 <div class="row"><div><label>Категория</label><select id="nmCat"></select></div><div><label>Ед.</label><select id="nmUnit"><option value="кг">кг</option><option value="г">г</option><option value="л">л</option><option value="мл">мл</option><option value="шт">шт</option><option value="м">м</option></select></div></div>
 <div class="row"><div><label>Цена, грн/ед.</label><input id="nmPrice" type="number" min="0" step="0.01" value="0"></div><div><label>Плотность, г/см³</label><input id="nmDen" type="number" min="0" step="0.01" value="0"></div></div>
 <label>Примечание</label><input id="nmNote" placeholder="t° плавл., поставщик, SDS-статус">
 <div class="row"><button class="btn" onclick="saveMat()">Сохранить</button><button class="btn gy" onclick="cancelMat()">Отменить</button></div>
-<div class="small">Плотность нужна для режима «по геометрии». Калибровка: отмерить объём → взвесить → г/мл. Справочные чистые вещества = подсказка [VERIFY_EXTERNAL].</div>
+<div class="small">Плотность нужна для геометрии. Калибровка: отмерить объём → взвесить → г/мл. Справочные чистые вещества = подсказка [VERIFY].</div>
 </div>
 <div class="card"><h3>База материалов: <span id="mCount">0</span></h3><div id="matList"></div></div>
 </section>
@@ -149,19 +178,22 @@ td input{padding:6px;font-size:12px}
 <div class="card"><h3>Цеховые параметры</h3>
 <div class="row"><div><label>Потери по умолч., %</label><input id="sWaste" type="number" min="0" max="100" step="0.1" value="5"></div><div><label>Энергия/партия, грн</label><input id="sEnergy" type="number" min="0" step="0.1" value="0"></div></div>
 <div class="row"><div><label>Труд/партия, грн</label><input id="sLabor" type="number" min="0" step="0.1" value="0"></div><div><label>QC/изделие, грн</label><input id="sQc" type="number" min="0" step="0.01" value="0.35"></div></div>
-<label>Роялти / внутренний сбор, %</label><input id="sRoy" type="number" min="0" max="100" step="0.1" value="15">
+<div class="row"><div><label>Роялти / внутр. сбор, %</label><input id="sRoy" type="number" min="0" max="100" step="0.1" value="15"></div><div><label>Наценка Emzedgi, ×</label><input id="sMarkE" type="number" min="1" step="0.1" value="3"></div></div>
+<div class="row"><div><label>Наценка OMVi, ×</label><input id="sMarkO" type="number" min="1" step="0.1" value="2"></div><div></div></div>
 <button class="btn" onclick="saveSet()">Сохранить настройки</button></div>
 <div class="card"><h3>Резервные копии</h3><button class="btn bl" onclick="exportAll()">Экспорт JSON</button><button class="btn" onclick="document.getElementById('impFile').click()">Импорт JSON</button><input type="file" id="impFile" accept=".json" style="display:none" onchange="importAll(event)"><button class="btn rd" onclick="resetDB()">Сброс базы</button></div>
-<div class="card"><h3>О системе</h3><div class="small">MZG Craft Calc v1.2 · ТОВ «МЗГ СЕРВІС ГРУП» · м. Дніпро · ЄДРПОУ 30670104<br>PWA · IndexedDB · offline · [DB_SNAPSHOT 2026-04] · цены/ρ: [VERIFY_EXTERNAL]</div></div>
+<div class="card"><h3>О системе</h3><div class="small">Emzedgi Craft Calc v1.3 · ТОВ «МЗГ СЕРВІС ГРУП» · м. Дніпро · ЄДРПОУ 30670104<br>PWA · IndexedDB · offline · [DB_SNAPSHOT 2026-04] · цены/ρ/W/C: [VERIFY_EXTERNAL]</div></div>
 </section>
 
 <div id="toast" class="toast"></div>
 <script>
-const DB="MZGCraftCalcV12",VER=1;
-const CATS={wax:"Воск/основа",filler:"Наполнитель",binder:"Связующее",additive:"Добавка",dye:"Краситель",fragrance:"Ароматизатор",wick:"Фитиль",packaging:"Тара/расходник",base:"База жидк.",vessel:"Стакан/пузырёк",stick:"Палочки",decor:"Декор/защита",body:"Матрица тела"};
+const DB="MZGCraftCalcV13",VER=1;
+const CATS={wax:"Воск/основа",filler:"Наполнитель",binder:"Связующее",additive:"Добавка",dye:"Краситель",fragrance:"Ароматизатор",wick:"Фитиль",packaging:"Тара/расходник",base:"База жидк.",vessel:"Стакан/пузырёк",stick:"Палочки",decor:"Декор/защита",body:"Матрица тела",reinforce:"Армирование"};
+const EMO={wax:"🕯",filler:"🪨",binder:"🧱",additive:"➕",dye:"🎨",fragrance:"🌿",wick:"🧵",packaging:"📦",base:"💧",vessel:"🫙",stick:"🥢",decor:"✨",body:"🧱",reinforce:"🔗"};
 const BULK=["кг","г","л","мл"];
-const FILL={none:"пусто",wax:"воск",liquid:"жидкость",absorb:"пропитка"};
-let db,mats=[],recs=[],cur=null,mode="mass",cavs=[],cons=[],massC=[],rf={ml:100,pct:25,base:null,frag:null},geom={dout:70,h:120,body:null,wall:0,qty:1},set={waste:5,energy:0,labor:0,qc:0.35,roy:15};
+const FILL={none:"пусто/растение",wax:"воск",liquid:"жидкость",absorb:"пропитка маслом"};
+const MIXCLS={std:{wc:0.45,dose:0.3},prem:{wc:0.37,dose:0.3},self:{wc:0.30,dose:1.0}};
+let db,mats=[],recs=[],cur=null,mode="mass",profile="emzedgi",bodyType="mix",cavs=[],cons=[],massC=[],rf={ml:100,pct:25,base:null,frag:null},geom={dout:70,h:120,body:null,wall:0,qty:1},set={waste:5,energy:0,labor:0,qc:0.35,roy:15,markE:3,markO:2};
 const DEF=[
 {name:"Парафин П-2",cat:"wax",unit:"кг",price:45,density:0.90,note:"t°52-54 [VERIFY]"},
 {name:"Стеарин Т-12",cat:"wax",unit:"кг",price:62,density:0.94,note:"твёрдость [VERIFY]"},
@@ -174,10 +206,10 @@ const DEF=[
 {name:"Перлит вспученный",cat:"filler",unit:"кг",price:25,density:0.11,note:"теплоизоляция"},
 {name:"Мраморная крошка/мука",cat:"filler",unit:"кг",price:22,density:1.50,note:"матрица тела 10%"},
 {name:"Кварцевый песок",cat:"filler",unit:"кг",price:14,density:1.55,note:"замена крошки"},
-{name:"Гипс Г-66",cat:"body",unit:"кг",price:28,density:1.20,note:"матрица 60% [VERIFY]"},
+{name:"Гипс Г-66",cat:"body",unit:"кг",price:28,density:1.20,note:"замес: сухая часть [VERIFY]"},
 {name:"Огнеупорный цемент",cat:"body",unit:"кг",price:55,density:1.30,note:"матрица 30%"},
 {name:"Матрица тела (готовая смесь)",cat:"body",unit:"кг",price:34,density:1.25,note:"Г-66+цем+крошка 60/30/10 [VERIFY]"},
-{name:"СВВ-50 / PCE пластификатор",cat:"additive",unit:"кг",price:90,density:1.10,note:"1-1.5% сух.смеси"},
+{name:"СВВ-50 / PCE пластификатор",cat:"additive",unit:"кг",price:90,density:1.10,note:"замес: dose% от сухой"},
 {name:"Жидкое стекло",cat:"binder",unit:"кг",price:22,density:1.45,note:"изоляция слой1"},
 {name:"Эпоксидка 2к",cat:"binder",unit:"кг",price:320,density:1.15,note:"изоляция слой2, инертность к маслам"},
 {name:"Акриловый лак",cat:"decor",unit:"л",price:140,density:1.05,note:"внешняя защита"},
@@ -197,7 +229,12 @@ const DEF=[
 {name:"Стакан/пузырёк рефилл",cat:"vessel",unit:"шт",price:14,density:0,note:"inner vessel, в COGS"},
 {name:"Банка 200мл",cat:"vessel",unit:"шт",price:9,density:0,note:"тара свеча"},
 {name:"Палочки ротанг",cat:"stick",unit:"шт",price:3,density:0,note:"диффузор"},
-{name:"Этикетка MZG",cat:"packaging",unit:"шт",price:2.5,density:0,note:"маркировка"}
+{name:"Фибра полипропиленовая 12мм",cat:"reinforce",unit:"кг",price:145,density:0.91,note:"армирование кашпо"},
+{name:"Стеклосетка 5x5",cat:"reinforce",unit:"м",price:35,density:0,note:"армирование кашпо"},
+{name:"Базальтовое волокно",cat:"reinforce",unit:"кг",price:220,density:2.60,note:"огнестойкое армирование"},
+{name:"Этикетка MZG",cat:"packaging",unit:"шт",price:2.5,density:0,note:"маркировка"},
+{name:"Упаковка/коробка",cat:"packaging",unit:"шт",price:8,density:0,note:"B7 COGS-строка"},
+{name:"Доставка (на партию)",cat:"packaging",unit:"шт",price:0,density:0,note:"B7: впиши грн/партия в расходник qty=1"}
 ];
 function $(i){return document.getElementById(i)}
 function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
@@ -213,66 +250,78 @@ function put(s,v){return new Promise((res,rej)=>{const r=db.transaction(s,"readw
 function del(s,k){return new Promise((res,rej)=>{const r=db.transaction(s,"readwrite").objectStore(s).delete(k);r.onsuccess=()=>res(true);r.onerror=()=>rej(r.error)})}
 function clr(s){return new Promise((res,rej)=>{const r=db.transaction(s,"readwrite").objectStore(s).clear();r.onsuccess=()=>res(true);r.onerror=()=>rej(r.error)})}
 async function init(){db=await openDB();mats=await all("mats");if(!mats.length){for(const m of DEF)await put("mats",m);mats=await all("mats")}recs=await all("recs");const s=await get1("set","main");if(s)set={...set,...s};buildCats();applySet();$("waste").value=set.waste;renderAll();regSW()}
-function buildCats(){const f=$("mFilter"),n=$("nmCat");f.innerHTML='<option value="">Все</option>'+Object.entries(CATS).map(([k,v])=>`<option value="${k}">${v}</option>`).join("");n.innerHTML=Object.entries(CATS).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}
-function applySet(){$("sWaste").value=set.waste;$("sEnergy").value=set.energy;$("sLabor").value=set.labor;$("sQc").value=set.qc;$("sRoy").value=set.roy}
-function showTab(t){document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.id==="tab-"+t));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===t));if(t==="recipes")renderRecs();if(t==="materials")renderMats();if(t==="calc")fillSel()}
-function setMode(m){mode=m;$("mMass").classList.toggle("on",m==="mass");$("mGeom").classList.toggle("on",m==="geom");$("massFields").style.display=m==="mass"?"":"none";$("geomFields").style.display=m==="geom"?"":"none";$("cavCard").style.display=m==="geom"?"":"none";renderCavs();renderCons()}
-function optGroup(filterFn){const g={};mats.filter(filterFn).forEach(m=>{(g[m.cat]=g[m.cat]||[]).push(m)});return Object.keys(CATS).filter(c=>g[c]).map(c=>`<optgroup label="${CATS[c]}">`+g[c].map(m=>`<option value="${m.id}">${esc(m.name)} · ${m.price} грн/${m.unit}${m.density?" · ρ"+m.density:""}</option>`).join("")+"</optgroup>").join("")}
-function fillSel(){$("mSel").innerHTML=optGroup(m=>isBulk(m.unit));$("cSel").innerHTML=optGroup(m=>true);$("gBody").innerHTML=optGroup(m=>m.cat==="body"||m.cat==="binder"||m.cat==="filler");$("rfBase").innerHTML=optGroup(m=>m.cat==="base"||m.cat==="fragrance"||m.cat==="additive");$("rfFrag").innerHTML=optGroup(m=>m.cat==="fragrance"||m.cat==="base");if(!geom.body&&mats.length)geom.body=mats.find(m=>m.cat==="body")?.id||mats[0].id;$("gBody").value=geom.body||"";if(!rf.base)rf.base=mats.find(m=>m.cat==="base")?.id||null;if(!rf.frag)rf.frag=mats.find(m=>m.cat==="fragrance")?.id||null;$("rfBase").value=rf.base||"";$("rfFrag").value=rf.frag||""}
-function addMass(){const id=+$("mSel").value,v=parseFloat($("mVal").value),m=mat(id);if(!m)return toast("нет материала");if(!isBulk(m.unit))return toast("массовые % только для кг/л/г/мл");const e=massC.find(c=>c.id===id);if(e)e.v+=v;else massC.push({id,name:m.name,unit:m.unit,price:m.price,cat:m.cat,v});$("mVal").value=10;renderMass()}
+function buildCats(){const f=$("mFilter"),n=$("nmCat");f.innerHTML='<option value="">Все</option>'+Object.entries(CATS).map(([k,v])=>`<option value="${k}">${EMO[k]||""} ${v}</option>`).join("");n.innerHTML=Object.entries(CATS).map(([k,v])=>`<option value="${k}">${EMO[k]||""} ${v}</option>`).join("")}
+function applySet(){$("sWaste").value=set.waste;$("sEnergy").value=set.energy;$("sLabor").value=set.labor;$("sQc").value=set.qc;$("sRoy").value=set.roy;$("sMarkE").value=set.markE;$("sMarkO").value=set.markO}
+function showTab(t){document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.id==="tab-"+t));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===t));if(t==="recipes")renderRecs();if(t==="materials")renderMats();if(t==="calc"){fillPickers();fillSel()}}
+function setProfile(p){profile=p;$("pfEm").classList.toggle("on",p==="emzedgi");$("pfOm").classList.toggle("on",p==="omvi");$("rfPct").value=p==="emzedgi"?25:8;updRfHint()}
+function setMode(m){mode=m;$("mMass").classList.toggle("on",m==="mass");$("mGeom").classList.toggle("on",m==="geom");$("massFields").style.display=m==="mass"?"":"none";$("geomFields").style.display=m==="geom"?"":"none";$("cavCard").style.display=m==="geom"?"":"none";renderCavs();renderCons();renderMass()}
+function setBodyType(t){bodyType=t;$("btMix").classList.toggle("on",t==="mix");$("btPre").classList.toggle("on",t==="premix");$("mixBody").style.display=t==="mix"?"":"none";$("premixBody").style.display=t==="premix"?"":"none"}
+function mixPreset(){const c=MIXCLS[$("mixClass").value]||MIXCLS.prem;$("mixDose").value=c.dose;$("mixRho").value=c.wc<=0.37?1.83:1.65}
+function optGroup(filterFn){const g={};mats.filter(filterFn).forEach(m=>{(g[m.cat]=g[m.cat]||[]).push(m)});return Object.keys(CATS).filter(c=>g[c]).map(c=>`<optgroup label="${EMO[c]||""} ${CATS[c]}">`+g[c].map(m=>`<option value="${m.id}">${esc(m.name)}${m.density?" · ρ"+m.density:""}</option>`).join("")+"</optgroup>").join("")}
+function fillSel(){$("gBody").innerHTML=optGroup(m=>m.cat==="body"||m.cat==="binder"||m.cat==="filler");$("rfBase").innerHTML=optGroup(m=>m.cat==="base"||m.cat==="fragrance"||m.cat==="additive");$("rfFrag").innerHTML=optGroup(m=>m.cat==="fragrance"||m.cat==="base");if(!geom.body)geom.body=mats.find(m=>m.cat==="body")?.id||mats[0].id;$("gBody").value=geom.body||"";if(!rf.base)rf.base=mats.find(m=>m.cat==="base")?.id||null;if(!rf.frag)rf.frag=mats.find(m=>m.cat==="fragrance")?.id||null;$("rfBase").value=rf.base||"";$("rfFrag").value=rf.frag||"";updRfHint()}
+function pickerHtml(target,filterFn,unitLabel){const g={};mats.filter(filterFn).forEach(m=>{(g[m.cat]=g[m.cat]||[]).push(m)});let h="";Object.keys(CATS).filter(c=>g[c]).forEach(c=>{h+=`<div class="grp">${EMO[c]||""} ${CATS[c]}</div>`;g[c].forEach(m=>{h+=`<div class="mi"><input type="checkbox" data-t="${target}" data-id="${m.id}"><span>${esc(m.name)}${m.density?" · ρ"+m.density:""}</span><input type="number" min="0" step="0.1" value="${target==="mass"?10:1}" data-q="${target}-${m.id}" title="${unitLabel}"></div>`})});return h}
+function fillPickers(){$("massPicker").innerHTML=pickerHtml("mass",m=>isBulk(m.unit),"% от изделия");$("consPicker").innerHTML=pickerHtml("cons",m=>true,"кол-во на изделие")}
+function addSelected(target){const boxes=document.querySelectorAll(`input[data-t="${target}"]:checked`);if(!boxes.length)return toast("отметь материалы");let added=0,skip=0;boxes.forEach(b=>{const id=+b.dataset.id,m=mat(id);if(!m)return;const q=parseFloat(document.querySelector(`input[data-q="${target}-${id}"]`).value)||0;if(target==="mass"){if(!isBulk(m.unit)){skip++;return}if(massC.find(c=>c.id===id)){skip++;return}massC.push({id,name:m.name,unit:m.unit,price:m.price,cat:m.cat,v:q});added++}else{if(!(q>0)){skip++;return}if(cons.find(c=>c.id===id)){skip++;return}cons.push({id,name:m.name,unit:m.unit,price:m.price,bulk:isBulk(m.unit),q});added++}b.checked=false});if(target==="mass")renderMass();else renderCons();toast(added?("добавлено "+added+(skip?", пропущено "+skip:"")):"всё уже в составе / не подходит")}
 function updMass(i,v){massC[i].v=Math.max(0,parseFloat(v)||0);renderMass()}
 function rmMass(i){massC.splice(i,1);renderMass()}
-function renderMass(){const el=$("massList");if(!massC.length){el.innerHTML='<div class="empty">нет</div>';$("mTotal").innerHTML="";return}const b=parseFloat($("batch").value)||0;let tp=0;el.innerHTML="<table><tr><th>Материал</th><th>%</th><th>г</th><th></th></tr>"+massC.map((c,i)=>{tp+=c.v;const g=b*c.v/100;return `<tr><td>${esc(c.name)}</td><td><input type="number" min="0" step="0.1" value="${c.v}" onchange="updMass(${i},this.value)"></td><td class="small">${g.toFixed(1)}</td><td><button class="del" onclick="rmMass(${i})">×</button></td></tr>`}).join("")+"</table>";const cl=tp>100.5?"err":Math.abs(tp-100)<=0.5?"ok":"warn";$("mTotal").innerHTML=`Σ <b class="${cl}">${tp.toFixed(2)}%</b> ${tp>100.5?"превышение":tp<99.5?"неполно":"норма"}`}
-function normalizePercent(){const s=massC.reduce((a,c)=>a+c.v,0);if(s<=0)return toast("нет %-компонентов");massC.forEach(c=>c.v=+(c.v*100/s).toFixed(3));renderMass();toast("нормализовано")}
-function addCons(){const id=+$("cSel").value,q=parseFloat($("cVal").value),m=mat(id);if(!m)return toast("нет материала");if(!(q>0))return toast("кол-во > 0");const e=cons.find(c=>c.id===id);if(e)e.q+=q;else cons.push({id,name:m.name,unit:m.unit,price:m.price,bulk:isBulk(m.unit),q});$("cVal").value=1;renderCons()}
+function renderMass(){const el=$("massList");if(!massC.length){el.innerHTML='<div class="empty">нет</div>';$("mTotal").innerHTML="";return}const iw=parseFloat($("itemW").value)||0,qy=parseInt($("qty").value)||1;let tp=0;el.innerHTML="<table><tr><th>Материал</th><th>%изд.</th><th>г/изд.</th><th>г/партия</th><th></th></tr>"+massC.map((c,i)=>{tp+=c.v;const gi=iw*c.v/100,gb=gi*qy;return `<tr><td>${esc(c.name)}</td><td><input type="number" min="0" step="0.1" value="${c.v}" onchange="updMass(${i},this.value)"></td><td class="small">${gi.toFixed(1)}</td><td class="small">${gb.toFixed(1)}</td><td><button class="del" onclick="rmMass(${i})">×</button></td></tr>`}).join("")+"</table>";const cl=tp>100.5?"err":Math.abs(tp-100)<=0.5?"ok":"warn";$("mTotal").innerHTML=`Σ % от изделия <b class="${cl}">${tp.toFixed(2)}%</b> · партия=${(iw*qy).toFixed(0)} г ${tp>100.5?"превышение":tp<99.5?"неполно":"норма"}`}
+function normalizePercent(){const s=massC.reduce((a,c)=>a+c.v,0);if(s<=0)return toast("нет %-компонентов");massC.forEach(c=>c.v=+(c.v*100/s).toFixed(3));renderMass();toast("нормализовано к 100% изделия")}
 function updCons(i,v){cons[i].q=Math.max(0,parseFloat(v)||0);renderCons()}
 function rmCons(i){cons.splice(i,1);renderCons()}
 function consCostOne(c){return c.bulk?(c.q/1000)*c.price:c.q*c.price}
-function renderCons(){const el=$("consList");if(!cons.length){el.innerHTML='<div class="empty">нет</div>';return}el.innerHTML="<table><tr><th>Расходник</th><th>кол-во</th><th>грн/изд.</th><th></th></tr>"+cons.map((c,i)=>`<tr><td>${esc(c.name)}<br><span class="small">${c.bulk?"г/мл на изд.":"шт/м на изд."} · ${c.price} грн/${c.unit}</span></td><td><input type="number" min="0" step="0.01" value="${c.q}" onchange="updCons(${i},this.value)"></td><td class="small">${consCostOne(c).toFixed(2)}</td><td><button class="del" onclick="rmCons(${i})">×</button></td></tr>`).join("")+"</table>"}
-function addCavity(){cavs.push({type:"cyl",d:40,h:24,ml:0,fill:"wax",pad:0,padMat:null,hs:0});renderCavs()}
+function consUnit(c){return c.bulk?(c.unit==="кг"?"г":c.unit==="л"?"мл":c.unit):(c.unit==="м"?"м":c.unit==="шт"?"шт":c.unit)}
+function renderCons(){const el=$("consList");if(!cons.length){el.innerHTML='<div class="empty">нет</div>';return}el.innerHTML="<table><tr><th>Расходник</th><th>кол-во/изд.</th><th>грн/изд.</th><th></th></tr>"+cons.map((c,i)=>`<tr><td>${esc(c.name)}<br><span class="small">${c.bulk?"г/мл на изд.":"шт/м на изд."}</span></td><td><input type="number" min="0" step="0.01" value="${c.q}" onchange="updCons(${i},this.value)"> <span class="small">${consUnit(c)}</span></td><td class="small">${consCostOne(c).toFixed(2)}</td><td><button class="del" onclick="rmCons(${i})">×</button></td></tr>`).join("")+"</table>"}
+function addCavity(){cavs.push({type:"cyl",water:false,d:40,h:24,ml:0,emp:0,full:0,fill:"wax",pad:0,padMat:null,hs:0});renderCavs()}
 function rmCav(i){cavs.splice(i,1);renderCavs()}
-function updCav(i,k,v){cavs[i][k]=(k==="fill")?v:(parseFloat(v)||0);if(k==="type")cavs[i].fill=cavs[i].fill||"none";renderCavs()}
-function cavVol(c){return c.type==="measured"?(c.ml||0):vcyl(c.d,c.h)}
-function cavFillVol(c){if(c.type==="measured")return c.fill==="none"?0:(c.ml||0);const usable=Math.max(0,c.h-(c.pad||0)-(c.hs||0));if(c.fill==="none")return 0;if(c.fill==="absorb")return vcyl(c.d,c.h-(c.pad||0));return vcyl(c.d,usable)}
-function cavPadVol(c){if(c.type==="measured")return 0;return c.pad?vcyl(c.d,c.pad):0}
+function updCav(i,k,v){cavs[i][k]=(k==="fill"||k==="type"||k==="water")?v:(parseFloat(v)||0);renderCavs()}
+function cavVol(c){if(c.water)return Math.max(0,(c.full||0)-(c.emp||0));if(c.type==="measured")return c.ml||0;return vcyl(c.d,c.h)}
+function cavFillVol(c){const vol=cavVol(c);if(c.fill==="none")return 0;if(c.type==="cyl"&&!c.water){const usable=Math.max(0,c.h-(c.pad||0)-(c.hs||0));if(c.fill==="absorb")return vcyl(c.d,c.h-(c.pad||0));return vcyl(c.d,usable)}return vol}
+function cavPadVol(c){if(c.type!=="cyl"||c.water)return 0;return c.pad?vcyl(c.d,c.pad):0}
 function renderCavs(){const el=$("cavList");if(!cavs.length){el.innerHTML='<div class="empty">нет выемок</div>';return}el.innerHTML=cavs.map((c,i)=>`<div class="cav"><div class="cav-h"><span>Выемка ${i+1} · ${cavVol(c).toFixed(1)} см³</span><button class="del" onclick="rmCav(${i})">×</button></div>
-<div class="row"><div><label>Тип формы</label><select onchange="updCav(${i},'type',this.value)"><option value="cyl" ${c.type==="cyl"?"selected":""}>цилиндр (формула)</option><option value="measured" ${c.type==="measured"?"selected":""}>irregular (замер мл)</option></select></div><div><label>Заполнение</label><select onchange="updCav(${i},'fill',this.value)">${Object.entries(FILL).map(([k,v])=>`<option value="${k}" ${c.fill===k?"selected":""}>${v}</option>`).join("")}</select></div></div>
-${c.type==="cyl"?`<div class="row"><div><label>D внутр., мм</label><input type="number" min="0" value="${c.d}" onchange="updCav(${i},'d',this.value)"></div><div><label>h полости, мм</label><input type="number" min="0" value="${c.h}" onchange="updCav(${i},'h',this.value)"></div></div><div class="row"><div><label>Термо-дно h, мм</label><input type="number" min="0" value="${c.pad}" onchange="updCav(${i},'pad',this.value)"></div><div><label>Headspace, мм</label><input type="number" min="0" value="${c.hs}" onchange="updCav(${i},'hs',this.value)"></div></div><label>Материал термо-дна (вермикулит)</label><select onchange="updCav(${i},'padMat',this.value)"><option value="">—</option>${optGroup(m=>m.cat==="filler")}</select>`:`<div class="row"><div><label>Объём полости, мл</label><input type="number" min="0" value="${c.ml}" onchange="updCav(${i},'ml',this.value)"></div></div><div class="small">Irregular (бутылка/банка): замер водой → мл. Формула цилиндра не применяется.</div>`}
-</div>`).join("");if(cavs.some(c=>c.fill==="liquid")){$("refillCard").style.display="";syncRfMl()}else if(mode==="geom"&&!cavs.some(c=>c.fill==="liquid")){/* refill остаётся видимым для dvessel */}}
-function syncRfMl(){const mc=cavs.find(c=>c.type==="measured"&&c.fill!=="none");if(mc&&mc.ml)$("rfMl").value=mc.ml}
-function coreApply(){const t=parseFloat($("gWall").value)||0;if(t<=0)return toast("t=0 → ручной ввод");const d=Math.max(0,(parseFloat($("gDout").value)||0)-2*t);cavs.forEach(c=>{if(c.type==="cyl")c.d=d});geom.wall=t;renderCavs();toast("D выемок = "+d.toFixed(1)+" мм")}
+<div class="row"><div><label>Форма</label><select onchange="updCav(${i},'type',this.value)"><option value="cyl" ${c.type==="cyl"?"selected":""}>цилиндр (формула)</option><option value="measured" ${c.type==="measured"?"selected":""}>irregular (замер/вода)</option></select></div><div><label>Заполнение</label><select onchange="updCav(${i},'fill',this.value)">${Object.entries(FILL).map(([k,v])=>`<option value="${k}" ${c.fill===k?"selected":""}>${v}</option>`).join("")}</select></div></div>
+${c.type==="cyl"?`<div class="row"><div><label>D внутр., мм</label><input type="number" min="0" value="${c.d}" onchange="updCav(${i},'d',this.value)"></div><div><label>h полости, мм</label><input type="number" min="0" value="${c.h}" onchange="updCav(${i},'h',this.value)"></div></div><div class="row"><div><label>Термо-дно h, мм</label><input type="number" min="0" value="${c.pad}" onchange="updCav(${i},'pad',this.value)"></div><div><label>Headspace, мм</label><input type="number" min="0" value="${c.hs}" onchange="updCav(${i},'hs',this.value)"></div></div><label>Материал термо-дна</label><select onchange="updCav(${i},'padMat',this.value)"><option value="">—</option>${optGroup(m=>m.cat==="filler")}</select>`:`<div class="seg"><button class="${!c.water?"on":""}" onclick="updCav(${i},'water',false)">замер мл</button><button class="${c.water?"on":""}" onclick="updCav(${i},'water',true)">по воде (B3)</button></div>${c.water?`<div class="row"><div><label>Тара пустая, г</label><input type="number" min="0" value="${c.emp}" onchange="updCav(${i},'emp',this.value)"></div><div><label>С водой, г</label><input type="number" min="0" value="${c.full}" onchange="updCav(${i},'full',this.value)"></div></div><div class="small">V_мл = (с водой − пустая) · 1 г/мл воды.</div>`:`<div class="row"><div><label>Объём полости, мл</label><input type="number" min="0" value="${c.ml}" onchange="updCav(${i},'ml',this.value)"></div></div>`}`}
+</div>`).join("");const hasLiq=cavs.some(c=>c.fill==="liquid");$("refillCard").style.display=hasLiq?"":"none";if(hasLiq)syncRfMl()}
+function syncRfMl(){const mc=cavs.find(c=>(c.type==="measured"||c.water)&&c.fill!=="none");if(mc){const v=cavVol(mc);if(v)$("rfMl").value=v.toFixed(0)}}
+function coreApply(){const t=parseFloat($("gWall").value)||0;if(t<=0)return toast("t=0 → ручной ввод");const d=Math.max(0,(parseFloat($("gDout").value)||0)-2*t);cavs.forEach(c=>{if(c.type==="cyl"&&!c.water)c.d=d});geom.wall=t;renderCavs();toast("D выемок = "+d.toFixed(1)+" мм")}
 function readGeom(){geom.dout=parseFloat($("gDout").value)||0;geom.h=parseFloat($("gH").value)||0;geom.body=+$("gBody").value||null;geom.qty=Math.max(1,parseInt($("gQty").value)||1);geom.wall=parseFloat($("gWall").value)||0}
 function bodyVol(){readGeom();let v=vcyl(geom.dout,geom.h);cavs.forEach(c=>v-=cavVol(c));return Math.max(0,v)}
 function calc(){if(mode==="mass")calcMass();else calcGeom()}
-function calcMass(){const b=parseFloat($("batch").value)||0;if(b<=0)return toast("масса партии");const iw=parseFloat($("itemW").value)||0,w=parseFloat($("waste").value)||0;const useful=b*Math.max(0,1-w/100);const pcs=iw>0?Math.max(0,Math.floor(useful/iw)):1;let tp=0,raw=0,lines="";massC.forEach(c=>{tp+=c.v;const g=b*c.v/100,co=g*ppg(c);raw+=co;lines+=`<div class="rr"><span>${esc(c.name)} · ${c.v}%</span><span class="v">${g.toFixed(1)} г · ${co.toFixed(2)} грн</span></div>`});if(tp>100.5)return toast("Σ% > 100");const consOne=cons.reduce((a,c)=>a+consCostOne(c),0);const consBatch=consOne*pcs;raw+=consBatch;const en=set.energy,lab=set.labor,qc=set.qc*pcs,roy=raw*set.roy/100,cogs=raw+en+lab+qc+roy;showRes(lines,useful,pcs,raw,en+lab+qc,roy,cogs,pcs>0?cogs/pcs:0,tp)}
-function calcGeom(){readGeom();const N=geom.qty;const bm=mat(geom.body);if(!bm)return toast("выбери матрицу тела");if(!bm.density)return toast("у матрицы нет плотности ρ");const bv=bodyVol();const bmass=bv*bm.density;const bcost=bmass/1000*bm.price;let lines=`<div class="rr"><span>Тело (${esc(bm.name)}) ${bv.toFixed(1)} см³</span><span class="v">${bmass.toFixed(1)} г · ${bcost.toFixed(2)} грн</span></div>`;let raw=bcost;let warnFrag="";cavs.forEach((c,i)=>{const fv=cavFillVol(c),pv=cavPadVol(c);if(fv>0&&c.fill!=="none"){const fm=c.fill==="wax"?mat(defaultWax()):c.fill==="liquid"?mat(rf.base):mat(c.padMat||defaultVer());if(!fm||!fm.density){lines+=`<div class="rr"><span>Выемка ${i+1} ${FILL[c.fill]}</span><span class="v err">нет ρ материала</span></div>`;return}const fmass=fv*fm.density,fcost=fmass/1000*fm.price;raw+=fcost;lines+=`<div class="rr"><span>Выемка ${i+1} ${FILL[c.fill]} (${esc(fm.name)}) ${fv.toFixed(1)} см³</span><span class="v">${fmass.toFixed(1)} г · ${fcost.toFixed(2)} грн</span></div>`}if(pv>0){const pm=mat(c.padMat)||mat(defaultVer());if(pm&&pm.density){const pmass=pv*pm.density,pcost=pmass/1000*pm.price;raw+=pcost;lines+=`<div class="rr"><span>Выемка ${i+1} термо-дно (${esc(pm.name)}) ${pv.toFixed(1)} см³</span><span class="v">${pmass.toFixed(1)} г · ${pcost.toFixed(2)} грн</span></div>`}}});const rfMl=parseFloat($("rfMl").value)||0,rfPct=parseFloat($("rfPct").value)||0,bas=mat(rf.base),frg=mat(rf.frag);if(rfMl>0&&bas&&frg){const fml=rfMl*rfPct/100,bml=rfMl-fml;const fmass=fml*(frg.density||0.9),bmass2=bml*(bas.density||0.95);const fcost=fmass/1000*frg.price,bcost2=bmass2/1000*bas.price;raw+=fcost+bcost2;lines+=`<div class="rr"><span>Заправка: отдушка ${fml.toFixed(1)} мл</span><span class="v">${fmass.toFixed(1)} г · ${fcost.toFixed(2)} грн</span></div><div class="rr"><span>Заправка: база ${bml.toFixed(1)} мл</span><span class="v">${bmass2.toFixed(1)} г · ${bcost2.toFixed(2)} грн</span></div>`;if(rfPct<20||rfPct>30)warnFrag=`<span class="warn">⚠ % отдушки вне 20–30 [VERIFY]</span>`}const consOne=cons.reduce((a,c)=>a+consCostOne(c),0);const consBatch=consOne*N;raw+=consBatch;lines+=`<div class="rr"><span>Расходники ×${N}</span><span class="v">${consBatch.toFixed(2)} грн</span></div>`;const en=set.energy,lab=set.labor,qc=set.qc*N,roy=raw*set.roy/100,cogs=raw+en+lab+qc+roy;showRes(lines,0,N,raw,en+lab+qc,roy,cogs,N>0?cogs/N:0,-1,warnFrag)}
+function calcMass(){const iw=parseFloat($("itemW").value)||0,qy=parseInt($("qty").value)||1;if(iw<=0||qy<=0)return toast("масса/кол-во изделия");const w=parseFloat($("waste").value)||0;const batch=iw*qy;const useful=batch*Math.max(0,1-w/100);let tp=0,raw=0,lines="";massC.forEach(c=>{tp+=c.v;const gi=iw*c.v/100,gb=gi*qy,co=gb*ppg(c);raw+=co;lines+=`<div class="rr"><span>${esc(c.name)} · ${c.v}%изд.</span><span class="v">${gi.toFixed(1)} г/изд · ${gb.toFixed(1)} г · ${co.toFixed(2)} грн</span></div>`});if(tp>100.5)return toast("Σ% > 100");const consOne=cons.reduce((a,c)=>a+consCostOne(c),0);const consBatch=consOne*qy;raw+=consBatch;const en=set.energy,lab=set.labor,qc=set.qc*qy,roy=raw*set.roy/100,cogs=raw+en+lab+qc+roy;showRes(lines,useful,qy,raw,en+lab+qc,roy,cogs,qy>0?cogs/qy:0,tp)}
+function calcGeom(){readGeom();const N=geom.qty;let lines="",raw=0,warnFrag="";const bv=bodyVol();if(bodyType==="mix"){const rho=parseFloat($("mixRho").value)||1.83,rhoC=parseFloat($("mixRhoC").value)||1.30,wc=(MIXCLS[$("mixClass").value]||MIXCLS.prem).wc,dose=(parseFloat($("mixDose").value)||0)/100;const mSol=bv*rho,mDry=mSol/(1+wc),mWater=mSol-mDry,mSvv=mDry*dose;const gm=matByName("Гипс Г-66"),sv=matByName("СВВ-50");const cGyp=mDry/1000*(gm?gm.price:28),cSvv=mSvv/1000*(sv?sv.price:90);raw+=cGyp+cSvv;const mItem=bv*rhoC;lines+=`<div class="rr"><span>Замес тела ${bv.toFixed(1)} см³: гипс/вода/СВВ</span><span class="v">${mDry.toFixed(0)} / ${mWater.toFixed(0)} / ${mSvv.toFixed(1)} г</span></div><div class="rr"><span>COGS сухого+СВВ (вода ≈0)</span><span class="v">${(cGyp+cSvv).toFixed(2)} грн</span></div><div class="rr"><span>Масса 1 изделия (ρ_затв)</span><span class="v">${mItem.toFixed(0)} г</span></div>`}else{const bm=mat(geom.body);if(!bm)return toast("выбери матрицу тела");if(!bm.density)return toast("у матрицы нет ρ");const bmass=bv*bm.density,bcost=bmass/1000*bm.price;raw+=bcost;lines+=`<div class="rr"><span>Тело (${esc(bm.name)}) ${bv.toFixed(1)} см³</span><span class="v">${bmass.toFixed(1)} г · ${bcost.toFixed(2)} грн</span></div>`}
+cavs.forEach((c,i)=>{const fv=cavFillVol(c),pv=cavPadVol(c);if(fv>0&&c.fill!=="none"){const fm=c.fill==="wax"?mat(defaultWax()):c.fill==="liquid"?mat(rf.base):mat(c.padMat||defaultVer());if(!fm||!fm.density){lines+=`<div class="rr"><span>Выемка ${i+1} ${FILL[c.fill]}</span><span class="v err">нет ρ</span></div>`;return}const fmass=fv*fm.density,fcost=fmass/1000*fm.price;raw+=fcost;lines+=`<div class="rr"><span>Выемка ${i+1} ${FILL[c.fill]} (${esc(fm.name)})</span><span class="v">${fmass.toFixed(1)} г · ${fcost.toFixed(2)} грн</span></div>`}if(pv>0){const pm=mat(c.padMat)||mat(defaultVer());if(pm&&pm.density){const pmass=pv*pm.density,pcost=pmass/1000*pm.price;raw+=pcost;lines+=`<div class="rr"><span>Выемка ${i+1} термо-дно (${esc(pm.name)})</span><span class="v">${pmass.toFixed(1)} г · ${pcost.toFixed(2)} грн</span></div>`}}});
+const rfMl=parseFloat($("rfMl").value)||0,rfPct=parseFloat($("rfPct").value)||0,bas=mat(rf.base),frg=mat(rf.frag);if(rfMl>0&&bas&&frg){const fml=rfMl*rfPct/100,bml=rfMl-fml,fmass=fml*(frg.density||0.9),bmass2=bml*(bas.density||0.95),fcost=fmass/1000*frg.price,bcost2=bmass2/1000*bas.price;raw+=fcost+bcost2;lines+=`<div class="rr"><span>Заправка: отдушка ${fml.toFixed(1)} мл</span><span class="v">${fmass.toFixed(1)} г · ${fcost.toFixed(2)} грн</span></div><div class="rr"><span>Заправка: база ${bml.toFixed(1)} мл</span><span class="v">${bmass2.toFixed(1)} г · ${bcost2.toFixed(2)} грн</span></div>`;const lo=profile==="emzedgi"?20:5,hi=profile==="emzedgi"?30:10;if(rfPct<lo||rfPct>hi)warnFrag=`<span class="warn">⚠ % отдушки вне ${lo}–${hi} для ${profile} [VERIFY]</span>`}
+const consOne=cons.reduce((a,c)=>a+consCostOne(c),0),consBatch=consOne*N;raw+=consBatch;if(consBatch>0)lines+=`<div class="rr"><span>Расходники ×${N}</span><span class="v">${consBatch.toFixed(2)} грн</span></div>`;
+const en=set.energy,lab=set.labor,qc=set.qc*N,roy=raw*set.roy/100,cogs=raw+en+lab+qc+roy;showRes(lines,0,N,raw,en+lab+qc,roy,cogs,N>0?cogs/N:0,-1,warnFrag)}
+function matByName(n){return mats.find(m=>m.name.startsWith(n))}
 function defaultWax(){return mats.find(m=>m.name.includes("П-2"))?.id||mats.find(m=>m.cat==="wax")?.id}
 function defaultVer(){return mats.find(m=>m.name.includes("Вермикулит"))?.id}
-function showRes(lines,useful,pcs,raw,ovh,roy,cogs,cpi,tp,wf){let h=lines+`<hr style="border-color:#333;margin:8px 0">`;if(mode==="mass")h+=`<div class="rr"><span>Полезная масса</span><span class="v">${useful.toFixed(1)} г</span></div>`;h+=`<div class="rr"><span>Изделий</span><span class="v">${pcs}</span></div><div class="rr"><span>Сырьё+расходники</span><span class="v">${raw.toFixed(2)} грн</span></div><div class="rr"><span>Энергия+труд+QC</span><span class="v">${ovh.toFixed(2)} грн</span></div><div class="rr"><span>Роялти ${set.roy}%</span><span class="v">${roy.toFixed(2)} грн</span></div><div class="rr" style="font-size:14px"><span><b>COGS партии</b></span><span class="v" style="color:var(--ac)">${cogs.toFixed(2)} грн</span></div><div class="rr"><span>COGS на изделие</span><span class="v">${cpi.toFixed(2)} грн</span></div>`;if(tp>=0){const cl=tp>100.5?"err":Math.abs(tp-100)<=0.5?"ok":"warn";h+=`<div class="rr"><span class="${cl}">Σ массовых ${tp.toFixed(2)}%</span><span></span></div>`}if(cpi>0&&mode==="geom"){const perG=cpi/Math.max(1,vcyl(geom.dout,geom.h)*(mat(geom.body)?.density||1));if(perG>5)h+=`<div class="rr"><span class="err">⚠ аномалия COGS/г — проверь ρ и размеры</span><span></span></div>`}if(wf)h+=`<div class="rr"><span>${wf}</span><span></span></div>`;$("resultContent").innerHTML=h;$("resultBox").style.display="block";toast("расчёт готов")}
-/* == PART 2 END == */
-  function clearRecipe(){cur=null;massC=[];cons=[];cavs=[];rf={ml:100,pct:25,base:null,frag:null};geom={dout:70,h:120,body:null,wall:0,qty:1};$("rName").value="";$("rNotes").value="";$("batch").value=1000;$("itemW").value=100;$("waste").value=set.waste;$("gDout").value=70;$("gH").value=120;$("gQty").value=1;$("gWall").value=0;$("rfMl").value=100;$("rfPct").value=25;$("resultBox").style.display="none";setMode("mass");fillSel();renderMass();renderCons();renderCavs();toast("новая")}
-function preset(p){if(p==="double"){setMode("mass");$("pType").value="candle";$("batch").value=1000;$("itemW").value=100;const w=defaultWax(),s=mats.find(m=>m.name.includes("Соевый")),st=mats.find(m=>m.name.includes("Стеарин"));massC=[];if(w)massC.push({id:w,name:"Парафин П-2",unit:"кг",price:45,cat:"wax",v:40});if(s)massC.push({id:s.id,name:s.name,unit:s.unit,price:s.price,cat:s.cat,v:54});if(st)massC.push({id:st.id,name:st.name,unit:st.unit,price:st.price,cat:st.cat,v:6});renderMass();toast("двойная свеча → масса")}
-else if(p==="tea"){setMode("geom");$("gType").value="planter";$("gDout").value=70;$("gH").value=120;cavs=[{type:"cyl",d:40,h:24,ml:0,fill:"wax",pad:8,padMat:defaultVer(),hs:3}];renderCavs();toast("кашпо чайное")}
-else if(p==="tablet"){setMode("geom");$("gType").value="tablet";$("gDout").value=90;$("gH").value=35;cavs=[{type:"cyl",d:50,h:18,ml:0,fill:"none",pad:0,padMat:null,hs:0}];renderCavs();toast("таблетка")}
-else if(p==="dbath"){setMode("geom");$("gType").value="diffuser";$("gDout").value=70;$("gH").value=110;cavs=[{type:"cyl",d:45,h:60,ml:0,fill:"liquid",pad:0,padMat:null,hs:3}];$("refillCard").style.display="";renderCavs();toast("диффузор ванна")}
-else if(p==="dvessel"){setMode("geom");$("gType").value="diffuser";$("gDout").value=70;$("gH").value=110;cavs=[{type:"measured",d:0,h:0,ml:100,fill:"none",pad:0,padMat:null,hs:0}];const v=mats.find(m=>m.cat==="vessel"),k=mats.find(m=>m.cat==="stick");cons=[];if(v)cons.push({id:v.id,name:v.name,unit:v.unit,price:v.price,bulk:false,q:1});if(k)cons.push({id:k.id,name:k.name,unit:k.unit,price:k.price,bulk:false,q:6});$("refillCard").style.display="";renderCavs();renderCons();toast("диффузор пузырёк")}
-else if(p==="combo"){setMode("geom");$("gType").value="combo";$("gDout").value=90;$("gH").value=120;cavs=[{type:"cyl",d:40,h:24,ml:0,fill:"wax",pad:8,padMat:defaultVer(),hs:3},{type:"measured",d:0,h:0,ml:100,fill:"none",pad:0,padMat:null,hs:0}];$("refillCard").style.display="";renderCavs();toast("комбо")}
-else if(p==="sub"){setMode("geom");$("gType").value="sub";$("gDout").value=80;$("gH").value=25;cavs=[{type:"cyl",d:60,h:15,ml:0,fill:"wax",pad:0,padMat:null,hs:2}];renderCavs();toast("цоколь")}}
-async function saveRecipe(){const n=$("rName").value.trim();if(!n)return toast("название");const base={name:n,mode,notes:$("rNotes").value.trim(),updatedAt:new Date().toISOString()};if(mode==="mass")base.data={type:$("pType").value,batch:+$("batch").value,itemW:+$("itemW").value,waste:+$("waste").value,massC,cons};else{readGeom();base.data={gType:$("gType").value,geom,cons,cavs,rf:{ml:+$("rfMl").value,pct:+$("rfPct").value,base:rf.base,frag:rf.frag}}}if(cur)base.id=cur;const k=await put("recs",base);if(!cur)cur=k;recs=await all("recs");renderRecs();toast("сохранено")}
-function renderRecs(){const el=$("recList");if(!recs.length){el.innerHTML='<div class="empty">нет</div>';return}const tn={candle:"Свеча",planter:"Кашпо",hybrid:"Гейзер",diffuser:"Диффузор",other:"Другое",tablet:"Таблетка",combo:"Комбо",sub:"Цоколь"};const sr=[...recs].sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));el.innerHTML=sr.map(r=>{const d=new Date(r.updatedAt).toLocaleString("ru-RU");const sm=r.mode==="mass"?`${(r.data.massC||[]).length} комп. · ${(r.data.cons||[]).length} расх.`:`${(r.data.cavs||[]).length} выемок · ${(r.data.cons||[]).length} расх.`;return `<div class="card" style="border-left:3px solid var(--ac)"><div style="display:flex;justify-content:space-between;gap:8px"><div><b style="color:var(--ac)">${esc(r.name)}</b><br><span class="small">${tn[r.data.type||r.data.gType]||r.mode} · ${d}</span></div><div style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn sm bl" onclick="loadRec(${r.id})">Загрузить</button><button class="btn sm" onclick="dupRec(${r.id})">Копия</button><button class="btn sm rd" onclick="delRec(${r.id})">×</button></div></div><div class="small" style="margin-top:6px">${sm}</div></div>`}).join("")}
-function loadRec(id){const r=recs.find(x=>x.id===id);if(!r)return;cur=r.id;setMode(r.mode);$("rName").value=r.name;$("rNotes").value=r.notes||"";if(r.mode==="mass"){$("pType").value=r.data.type||"candle";$("batch").value=r.data.batch;$("itemW").value=r.data.itemW;$("waste").value=r.data.waste;massC=r.data.massC||[];cons=r.data.cons||[];renderMass();renderCons()}else{$("gType").value=r.data.gType||"planter";geom=r.data.geom||geom;$("gDout").value=geom.dout;$("gH").value=geom.h;$("gQty").value=geom.qty;$("gWall").value=geom.wall||0;cavs=r.data.cavs||[];cons=r.data.cons||[];rf=r.data.rf||rf;$("rfMl").value=rf.ml;$("rfPct").value=rf.pct;fillSel();renderCavs();renderCons()}showTab("calc");toast("загружено")}
+function showRes(lines,useful,pcs,raw,ovh,roy,cogs,cpi,tp,wf){let h=lines+`<hr style="border-color:#333;margin:8px 0">`;if(mode==="mass")h+=`<div class="rr"><span>Полезная масса партии</span><span class="v">${useful.toFixed(1)} г</span></div>`;h+=`<div class="rr"><span>Изделий</span><span class="v">${pcs}</span></div><div class="rr"><span>Сырьё+расходники</span><span class="v">${raw.toFixed(2)} грн</span></div><div class="rr"><span>Энергия+труд+QC</span><span class="v">${ovh.toFixed(2)} грн</span></div><div class="rr"><span>Роялти ${set.roy}%</span><span class="v">${roy.toFixed(2)} грн</span></div><div class="rr" style="font-size:14px"><span><b>COGS партии</b></span><span class="v" style="color:var(--ac)">${cogs.toFixed(2)} грн</span></div><div class="rr"><span>COGS на изделие</span><span class="v">${cpi.toFixed(2)} грн</span></div>`;const mk=profile==="emzedgi"?set.markE:set.markO;h+=`<div class="rr"><span>Розница ≈ COGS×${mk} (${profile})</span><span class="v ok">${(cpi*mk).toFixed(2)} грн/изд.</span></div>`;if(tp>=0){const cl=tp>100.5?"err":Math.abs(tp-100)<=0.5?"ok":"warn";h+=`<div class="rr"><span class="${cl}">Σ массовых ${tp.toFixed(2)}%</span><span></span></div>`}if(wf)h+=`<div class="rr"><span>${wf}</span><span></span></div>`;$("resultContent").innerHTML=h;$("resultBox").style.display="block";renderProcess();toast("расчёт готов")}
+function renderProcess(){const steps=[];const P=profile==="emzedgi"?"Emzedgi (премиум)":"OMVi (средний)";steps.push(`Профиль: ${P}. Плантер → content.`);if(mode==="geom"){steps.push(`Замес тела: класс ${$("mixClass")?$("mixClass").selectedOptions[0].text:"—"}; отмерь объём формы → гипс/вода/СВВ по расчёту [VERIFY t°, время mixing].`);steps.push("Формовка: залить матрицу в форму, Core-Insert для равномерной стенки 10–20 мм [VERIFY].");steps.push("Сушка 48 ч [VERIFY для твоего состава].");if(cavs.some(c=>c.fill==="liquid"||c.fill==="absorb")){steps.push("Изоляция выемки: жидкое стекло → полимеризация [VERIFY] → эпоксидный слой (инертность к маслам) [VERIFY t°/время].");steps.push("Финиш: акрил/декор/патина (Emzedgi) [VERIFY].")}else{steps.push("Термо-изоляция выемки под воск (для свечного content) [VERIFY].")}steps.push("Сборка: установить inner vessel / фитиль / палочки по content.")}else{steps.push("Сухой микс: отвесить массовые компоненты по % от изделия (Σ=100%).");steps.push("Расплав воска до t° [VERIFY]; ввести отдушку/добавки при t° [VERIFY].");if(cavs.some(c=>c.fill==="wax")||$("pType")?.value==="wax")steps.push("Двойная заливка (если double): оболочка-кольцо П-2 → барьер П-2 → сердцевина [VERIFY порядок/время между слоями].");steps.push("Заливка в плантер/тару, установка фитиля, набор [VERIFY].")}steps.push("QC: APPROVED_FOR_DUTY / REJECT / CRUMB; лог партии в примечании рецепта.");$("procList").innerHTML=steps.map(s=>`<li>${esc(s).replace(/\[VERIFY[^\]]*\]/g,m=>`<span class="ph">${m}</span>`)}</li>`).join("");$("procBox").style.display="block"}
+function copyProcess(){const txt=[...document.querySelectorAll("#procList li")].map((li,i)=>(i+1)+". "+li.textContent).join("\n");navigator.clipboard.writeText(txt).then(()=>toast("процесс скопирован")).catch(()=>toast("не удалось скопировать"))}
+function clearRecipe(){cur=null;massC=[];cons=[];cavs=[];rf={ml:100,pct:25,base:null,frag:null};geom={dout:70,h:120,body:null,wall:0,qty:1};$("rName").value="";$("rNotes").value="";$("itemW").value=100;$("qty").value=1;$("waste").value=set.waste;$("gDout").value=70;$("gH").value=120;$("gQty").value=1;$("gWall").value=0;$("rfMl").value=100;$("resultBox").style.display="none";$("procBox").style.display="none";setProfile("emzedgi");setMode("mass");setBodyType("mix");fillPickers();fillSel();renderMass();renderCons();renderCavs();toast("новая")}
+function preset(p){if(p==="double"){setMode("mass");$("pType").value="wax";$("itemW").value=100;$("qty").value=1;const w=defaultWax(),s=mats.find(m=>m.name.includes("Соевый")),st=mats.find(m=>m.name.includes("Стеарин"));massC=[];if(w)massC.push({id:w,name:"Парафин П-2",unit:"кг",price:45,cat:"wax",v:40});if(s)massC.push({id:s.id,name:s.name,unit:s.unit,price:s.price,cat:s.cat,v:54});if(st)massC.push({id:st.id,name:st.name,unit:st.unit,price:st.price,cat:st.cat,v:6});renderMass();toast("двойная свеча → масса")}
+else if(p==="tea"){setMode("geom");$("gType").value="planter";$("gDout").value=70;$("gH").value=120;cavs=[{type:"cyl",water:false,d:40,h:24,ml:0,emp:0,full:0,fill:"wax",pad:8,padMat:defaultVer(),hs:3}];renderCavs();toast("кашпо чайное")}
+else if(p==="tablet"){setMode("geom");$("gType").value="tablet";$("gDout").value=90;$("gH").value=35;cavs=[{type:"cyl",water:false,d:50,h:18,ml:0,emp:0,full:0,fill:"none",pad:0,padMat:null,hs:0}];renderCavs();toast("таблетка (полость опц.)")}
+else if(p==="dbath"){setMode("geom");$("gType").value="diffuser";$("gDout").value=70;$("gH").value=110;cavs=[{type:"cyl",water:false,d:45,h:60,ml:0,emp:0,full:0,fill:"liquid",pad:0,padMat:null,hs:3}];renderCavs();toast("диффузор ванна")}
+else if(p==="dvessel"){setMode("geom");$("gType").value="diffuser";$("gDout").value=70;$("gH").value=110;cavs=[{type:"measured",water:true,d:0,h:0,ml:100,emp:30,full:130,fill:"none",pad:0,padMat:null,hs:0}];const v=mats.find(m=>m.cat==="vessel"),k=mats.find(m=>m.cat==="stick");cons=[];if(v)cons.push({id:v.id,name:v.name,unit:v.unit,price:v.price,bulk:false,q:1});if(k)cons.push({id:k.id,name:k.name,unit:k.unit,price:k.price,bulk:false,q:6});renderCavs();renderCons();toast("диффузор пузырёк (по воде)")}
+else if(p==="combo"){setMode("geom");$("gType").value="combo";$("gDout").value=90;$("gH").value=120;cavs=[{type:"cyl",water:false,d:40,h:24,ml:0,emp:0,full:0,fill:"wax",pad:8,padMat:defaultVer(),hs:3},{type:"measured",water:false,d:0,h:0,ml:100,emp:0,full:0,fill:"none",pad:0,padMat:null,hs:0}];renderCavs();toast("комбо свеча+диф")}
+else if(p==="sub"){setMode("geom");$("gType").value="sub";$("gDout").value=80;$("gH").value=25;cavs=[{type:"cyl",water:false,d:60,h:15,ml:0,emp:0,full:0,fill:"wax",pad:0,padMat:null,hs:2}];renderCavs();toast("цоколь 20-30мм")}}
+async function saveRecipe(){const n=$("rName").value.trim();if(!n)return toast("название");const base={name:n,mode,profile,bodyType,notes:$("rNotes").value.trim(),updatedAt:new Date().toISOString()};if(mode==="mass")base.data={type:$("pType").value,itemW:+$("itemW").value,qty:+$("qty").value,waste:+$("waste").value,massC,cons};else{readGeom();base.data={gType:$("gType").value,geom,mix:{cls:$("mixClass").value,rho:+$("mixRho").value,rhoC:+$("mixRhoC").value,dose:+$("mixDose").value},cons,cavs,rf:{ml:+$("rfMl").value,pct:+$("rfPct").value,base:rf.base,frag:rf.frag}}}if(cur)base.id=cur;const k=await put("recs",base);if(!cur)cur=k;recs=await all("recs");renderRecs();toast("сохранено")}
+function renderRecs(){const el=$("recList");if(!recs.length){el.innerHTML='<div class="empty">нет</div>';return}const tn={wax:"🕯 Свеча",liquid:"💧 Диффузор",plant:"🌿 Растение",other:"Другое",planter:"🪴 Кашпо",tablet:"🌿 Таблетка",combo:"🔥 Комбо",sub:"🧱 Цоколь"};const sr=[...recs].sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));el.innerHTML=sr.map(r=>{const d=new Date(r.updatedAt).toLocaleString("ru-RU");const pb=r.profile==="emzedgi"?"<span class='badge' style='background:var(--pk)'>Emzedgi</span>":"<span class='badge' style='background:var(--bl)'>OMVi</span>";const sm=r.mode==="mass"?`${(r.data.massC||[]).length} комп. · ${(r.data.cons||[]).length} расх.`:`${(r.data.cavs||[]).length} выемок · ${(r.data.cons||[]).length} расх.`;return `<div class="card" style="border-left:3px solid var(--ac)"><div style="display:flex;justify-content:space-between;gap:8px"><div><b style="color:var(--ac)">${esc(r.name)}</b> ${pb}<br><span class="small">${tn[r.data.type||r.data.gType]||r.mode} · ${d}</span></div><div style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn sm bl" onclick="loadRec(${r.id})">Загрузить</button><button class="btn sm" onclick="dupRec(${r.id})">Копия</button><button class="btn sm rd" onclick="delRec(${r.id})">×</button></div></div><div class="small" style="margin-top:6px">${sm}</div></div>`}).join("")}
+function loadRec(id){const r=recs.find(x=>x.id===id);if(!r)return;cur=r.id;setProfile(r.profile||"emzedgi");setMode(r.mode);setBodyType(r.bodyType||"mix");$("rName").value=r.name;$("rNotes").value=r.notes||"";if(r.mode==="mass"){$("pType").value=r.data.type||"wax";$("itemW").value=r.data.itemW;$("qty").value=r.data.qty;$("waste").value=r.data.waste;massC=r.data.massC||[];cons=r.data.cons||[];renderMass();renderCons()}else{$("gType").value=r.data.gType||"planter";geom=r.data.geom||geom;const mx=r.data.mix||{};if(mx.cls)$("mixClass").value=mx.cls;if(mx.rho)$("mixRho").value=mx.rho;if(mx.rhoC)$("mixRhoC").value=mx.rhoC;if(mx.dose)$("mixDose").value=mx.dose;$("gDout").value=geom.dout;$("gH").value=geom.h;$("gQty").value=geom.qty;$("gWall").value=geom.wall||0;cavs=r.data.cavs||[];cons=r.data.cons||[];rf=r.data.rf||rf;$("rfMl").value=rf.ml;$("rfPct").value=rf.pct;fillSel();renderCavs();renderCons()}showTab("calc");toast("загружено")}
 async function dupRec(id){const r=recs.find(x=>x.id===id);if(!r)return;await put("recs",{...r,id:undefined,name:r.name+" (копия)",updatedAt:new Date().toISOString()});recs=await all("recs");renderRecs();toast("копия")}
 async function delRec(id){if(!confirm("удалить рецепт?"))return;await del("recs",id);recs=await all("recs");if(cur===id)cur=null;renderRecs();toast("удалено")}
-function renderMats(){const q=($("mSearch").value||"").toLowerCase().trim(),cf=$("mFilter").value;const fl=mats.filter(m=>{const h=(m.name+" "+(m.note||"")+" "+(CATS[m.cat]||"")).toLowerCase();return(!q||h.includes(q))&&(!cf||m.cat===cf)});$("mCount").textContent=mats.length;const el=$("matList");if(!fl.length){el.innerHTML='<div class="empty">не найдено</div>';return}el.innerHTML="<table><tr><th>Материал</th><th>Кат.</th><th>Цена</th><th>ρ</th><th></th></tr>"+fl.map(m=>`<tr><td><b>${esc(m.name)}</b><br><span class="small">${esc(m.note||"")}</span></td><td><span class="badge b-${m.cat}">${CATS[m.cat]||m.cat}</span></td><td>${m.price} грн/${m.unit}</td><td class="small">${m.density||"—"}</td><td style="white-space:nowrap"><button class="btn sm bl" onclick="editMat(${m.id})">Изм.</button><button class="del" onclick="delMat(${m.id})">×</button></td></tr>`).join("")+"</table>"}
-function saveMat(){const n=$("nmName").value.trim();if(!n)return toast("название");const p={name:n,cat:$("nmCat").value,unit:$("nmUnit").value,price:parseFloat($("nmPrice").value)||0,density:parseFloat($("nmDen").value)||0,note:$("nmNote").value.trim()};const e=$("mEditId").value;if(e)p.id=+e;put("mats",p).then(async()=>{mats=await all("mats");cancelMat();renderAll();toast(e?"обновлено":"добавлено")})}
+function renderMats(){const q=($("mSearch").value||"").toLowerCase().trim(),cf=$("mFilter").value;const fl=mats.filter(m=>{const h=(m.name+" "+(m.note||"")+" "+(CATS[m.cat]||"")).toLowerCase();return(!q||h.includes(q))&&(!cf||m.cat===cf)});$("mCount").textContent=mats.length;const el=$("matList");if(!fl.length){el.innerHTML='<div class="empty">не найдено</div>';return}el.innerHTML="<table><tr><th>Материал</th><th>Кат.</th><th>Цена</th><th>ρ</th><th></th></tr>"+fl.map(m=>`<tr><td><b>${esc(m.name)}</b><br><span class="small">${esc(m.note||"")}</span></td><td><span class="badge b-${m.cat}">${EMO[m.cat]||""} ${CATS[m.cat]||m.cat}</span></td><td>${m.price} грн/${m.unit}</td><td class="small">${m.density||"—"}</td><td style="white-space:nowrap"><button class="btn sm bl" onclick="editMat(${m.id})">Изм.</button><button class="del" onclick="delMat(${m.id})">×</button></td></tr>`).join("")+"</table>"}
+function saveMat(){const n=$("nmName").value.trim();if(!n)return toast("название");const e=$("mEditId").value;const dup=mats.find(m=>m.name.toLowerCase()===n.toLowerCase()&&m.id!==+e);if(dup&&!e)return toast("материал с таким именем уже есть (id "+dup.id+")");const p={name:n,cat:$("nmCat").value,unit:$("nmUnit").value,price:parseFloat($("nmPrice").value)||0,density:parseFloat($("nmDen").value)||0,note:$("nmNote").value.trim()};if(e)p.id=+e;put("mats",p).then(async()=>{mats=await all("mats");cancelMat();renderAll();toast(e?"обновлено":"добавлено")})}
 function editMat(id){const m=mat(id);if(!m)return;$("mEditId").value=m.id;$("nmName").value=m.name;$("nmCat").value=m.cat;$("nmUnit").value=m.unit;$("nmPrice").value=m.price;$("nmDen").value=m.density||"";$("nmNote").value=m.note||"";$("mFormT").textContent="Редактирование";showTab("materials")}
 function cancelMat(){$("mEditId").value="";["nmName","nmNote"].forEach(i=>$(i).value="");$("nmCat").value="wax";$("nmUnit").value="кг";$("nmPrice").value=0;$("nmDen").value=0;$("mFormT").textContent="Новый материал"}
 async function delMat(id){if(!confirm("удалить материал? рецепты сохранят историю"))return;await del("mats",id);mats=await all("mats");renderAll();toast("удалено")}
-async function saveSet(){set={waste:+$("sWaste").value||0,energy:+$("sEnergy").value||0,labor:+$("sLabor").value||0,qc:+$("sQc").value||0,roy:+$("sRoy").value||0};await put("set",{k:"main",...set});$("waste").value=set.waste;renderMass();toast("настройки сохранены")}
-async function exportAll(){const d={app:"MZG-Craft-Calc",version:"1.2",at:new Date().toISOString(),mats:await all("mats"),recs:await all("recs"),set};const bl=new Blob([JSON.stringify(d,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download="MZG_Calc_v12_"+new Date().toISOString().slice(0,10)+".json";a.click();URL.revokeObjectURL(a.href);toast("экспорт готов")}
+async function saveSet(){set={waste:+$("sWaste").value||0,energy:+$("sEnergy").value||0,labor:+$("sLabor").value||0,qc:+$("sQc").value||0,roy:+$("sRoy").value||0,markE:+$("sMarkE").value||3,markO:+$("sMarkO").value||2};await put("set",{k:"main",...set});$("waste").value=set.waste;renderMass();toast("настройки сохранены")}
+function updRfHint(){const lo=profile==="emzedgi"?20:5,hi=profile==="emzedgi"?30:10;$("rfHint").innerHTML=`Диапазон ${lo}–30%? нет: ${lo}–${hi}% для ${profile} [VERIFY]. База = 1 материал, раскладка А/Б/В вне калькулятора.`}
+async function exportAll(){const d={app:"Emzedgi-Craft-Calc",version:"1.3",at:new Date().toISOString(),mats:await all("mats"),recs:await all("recs"),set};const bl=new Blob([JSON.stringify(d,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download="Emzedgi_Calc_v13_"+new Date().toISOString().slice(0,10)+".json";a.click();URL.revokeObjectURL(a.href);toast("экспорт готов")}
 async function importAll(e){const f=e.target.files[0];if(!f)return;try{const t=await f.text(),d=JSON.parse(t);if(!Array.isArray(d.mats))throw new Error("формат");await clr("mats");await clr("recs");for(const m of d.mats)await put("mats",m);if(Array.isArray(d.recs))for(const r of d.recs)await put("recs",r);if(d.set){set=d.set;await put("set",{k:"main",...set});applySet()}mats=await all("mats");recs=await all("recs");cur=null;massC=[];cons=[];cavs=[];renderAll();toast("импорт готов")}catch(err){toast("ошибка: "+err.message)}e.target.value=""}
-async function resetDB(){if(!confirm("сбросить базу?"))return;if(!confirm("точно? сделай экспорт"))return;await clr("mats");await clr("recs");await clr("set");for(const m of DEF)await put("mats",m);mats=await all("mats");recs=[];cur=null;massC=[];cons=[];cavs=[];set={waste:5,energy:0,labor:0,qc:0.35,roy:15};await put("set",{k:"main",...set});applySet();$("waste").value=set.waste;renderAll();toast("сброшено")}
-function renderAll(){fillSel();renderMats();renderMass();renderCons();renderCavs();renderRecs()}
+async function resetDB(){if(!confirm("сбросить базу?"))return;if(!confirm("точно? сделай экспорт"))return;await clr("mats");await clr("recs");await clr("set");for(const m of DEF)await put("mats",m);mats=await all("mats");recs=[];cur=null;massC=[];cons=[];cavs=[];set={waste:5,energy:0,labor:0,qc:0.35,roy:15,markE:3,markO:2};await put("set",{k:"main",...set});applySet();$("waste").value=set.waste;renderAll();toast("сброшено")}
+function renderAll(){fillPickers();fillSel();renderMats();renderMass();renderCons();renderCavs();renderRecs()}
 async function regSW(){if(!("serviceWorker"in navigator))return;if(location.protocol==="file:"){toast("для установки нужен HTTPS/localhost");return}try{const r=await navigator.serviceWorker.register("./sw.js");if(r.waiting)r.waiting.postMessage({type:"SKIP_WAITING"});navigator.serviceWorker.addEventListener("controllerchange",()=>{if(window._swr)return;window._swr=true;location.reload()})}catch(e){console.warn("SW fail",e)}}
 init().catch(e=>{console.error(e);toast("ошибка init: "+e.message)});
 </script>
