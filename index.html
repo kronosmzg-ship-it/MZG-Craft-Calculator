@@ -1,1407 +1,280 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <meta name="theme-color" content="#111111" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>MZG Craft Calculator</title>
-  <link rel="manifest" href="manifest.webmanifest" />
-  <style>
-    :root {
-      --bg: #111;
-      --panel: #1a1a1a;
-      --panel2: #0d0d0d;
-      --border: #333;
-      --accent: #c8a84e;
-      --text: #e0e0e0;
-      --dim: #777;
-      --green: #2e7d32;
-      --red: #b71c1c;
-      --blue: #1565c0;
-      --orange: #e65100;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: "Courier New", monospace;
-      background: var(--bg);
-      color: var(--text);
-      font-size: 14px;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: var(--panel);
-      border-bottom: 2px solid var(--accent);
-      padding: 10px 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 15px;
-      letter-spacing: 1.5px;
-      color: var(--accent);
-    }
-
-    .sub {
-      font-size: 10px;
-      color: var(--dim);
-    }
-
-    nav {
-      position: sticky;
-      top: 47px;
-      z-index: 99;
-      display: flex;
-      gap: 4px;
-      padding: 8px;
-      background: var(--panel);
-      border-bottom: 1px solid var(--border);
-      overflow-x: auto;
-    }
-
-    nav button {
-      flex: 0 0 auto;
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--dim);
-      font-family: inherit;
-      font-size: 12px;
-      padding: 9px 12px;
-      border-radius: 2px;
-      cursor: pointer;
-    }
-
-    nav button.active {
-      color: var(--accent);
-      border-color: var(--accent);
-      background: #1f1f1f;
-    }
-
-    .tab {
-      display: none;
-      padding: 12px;
-    }
-
-    .tab.active { display: block; }
-
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 12px;
-      margin-bottom: 10px;
-    }
-
-    .card h3 {
-      margin: 0 0 8px;
-      font-size: 13px;
-      color: var(--accent);
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 5px;
-    }
-
-    label {
-      display: block;
-      font-size: 11px;
-      color: var(--dim);
-      margin: 7px 0 3px;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      background: var(--panel2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 9px;
-      font-family: inherit;
-      font-size: 13px;
-      border-radius: 2px;
-    }
-
-    textarea { min-height: 60px; resize: vertical; }
-
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
-
-    .row {
-      display: flex;
-      gap: 8px;
-      align-items: end;
-    }
-
-    .row > * { flex: 1; }
-
-    .btn {
-      width: 100%;
-      margin-top: 8px;
-      border: none;
-      background: var(--accent);
-      color: #000;
-      font-family: inherit;
-      font-size: 12px;
-      font-weight: bold;
-      letter-spacing: 1px;
-      padding: 10px 12px;
-      border-radius: 2px;
-      cursor: pointer;
-    }
-
-    .btn:active { opacity: 0.82; }
-    .btn.green { background: var(--green); color: #fff; }
-    .btn.blue { background: var(--blue); color: #fff; }
-    .btn.red { background: var(--red); color: #fff; }
-    .btn.gray { background: #333; color: var(--text); }
-    .btn.sm { width: auto; margin: 0; padding: 7px 10px; font-size: 11px; }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-    }
-
-    th {
-      text-align: left;
-      color: var(--accent);
-      border-bottom: 1px solid var(--border);
-      padding: 6px 4px;
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 6px 4px;
-      border-bottom: 1px solid #222;
-      vertical-align: middle;
-    }
-
-    td input {
-      padding: 6px;
-      font-size: 12px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 2px 6px;
-      border-radius: 2px;
-      font-size: 10px;
-      font-weight: bold;
-      color: #fff;
-      white-space: nowrap;
-    }
-
-    .badge.wax { background: #5d4037; }
-    .badge.filler { background: #33691e; }
-    .badge.binder { background: #4a148c; }
-    .badge.additive { background: #01579b; }
-    .badge.dye { background: #880e4f; }
-    .badge.fragrance { background: #1b5e20; }
-    .badge.wick { background: var(--orange); }
-    .badge.packaging { background: #37474f; }
-
-    .result-box {
-      display: none;
-      background: #0a0a0a;
-      border: 2px solid var(--accent);
-      border-radius: 4px;
-      padding: 12px;
-      margin-top: 10px;
-    }
-
-    .result-box h4 {
-      margin: 0 0 8px;
-      color: var(--accent);
-      font-size: 13px;
-    }
-
-    .result-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 3px 0;
-      font-size: 12px;
-    }
-
-    .result-row .val {
-      color: #fff;
-      font-weight: bold;
-      text-align: right;
-    }
-
-    .warn { color: var(--accent); }
-    .error { color: var(--red); }
-    .ok { color: var(--green); }
-
-    .del {
-      background: none;
-      border: none;
-      color: var(--red);
-      font-size: 17px;
-      cursor: pointer;
-      padding: 0 4px;
-    }
-
-    .empty {
-      color: var(--dim);
-      font-style: italic;
-      text-align: center;
-      padding: 16px;
-    }
-
-    .recipe-card {
-      border-left: 3px solid var(--accent);
-    }
-
-    .recipe-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 8px;
-    }
-
-    .recipe-actions {
-      display: flex;
-      gap: 4px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .small {
-      font-size: 11px;
-      color: var(--dim);
-    }
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      background: var(--green);
-      color: #fff;
-      padding: 10px 16px;
-      border-radius: 4px;
-      font-size: 12px;
-      z-index: 999;
-      display: none;
-      max-width: 92vw;
-      text-align: center;
-    }
-
-    @media (min-width: 700px) {
-      .tab { max-width: 760px; margin: 0 auto; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>MZG Craft Calc v1.2</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{--bg:#111;--panel:#1a1a1a;--panel2:#0d0d0d;--bd:#333;--ac:#c8a84e;--tx:#e0e0e0;--dim:#777;--gr:#2e7d32;--rd:#b71c1c;--bl:#1565c0;--or:#e65100}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Courier New",monospace;background:var(--bg);color:var(--tx);font-size:14px;min-height:100vh;overflow-x:hidden}
+header{position:sticky;top:0;z-index:100;background:var(--panel);border-bottom:2px solid var(--ac);padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+header h1{font-size:15px;letter-spacing:1.5px;color:var(--ac)}
+.sub{font-size:10px;color:var(--dim)}
+nav{position:sticky;top:47px;z-index:99;display:flex;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--bd);overflow-x:auto}
+nav button{flex:0 0 auto;background:transparent;border:1px solid var(--bd);color:var(--dim);font-family:inherit;font-size:12px;padding:9px 12px;border-radius:2px;cursor:pointer}
+nav button.active{color:var(--ac);border-color:var(--ac);background:#1f1f1f}
+.tab{display:none;padding:12px}.tab.active{display:block}
+.card{background:var(--panel);border:1px solid var(--bd);border-radius:4px;padding:12px;margin-bottom:10px}
+.card h3{font-size:13px;color:var(--ac);border-bottom:1px solid var(--bd);padding-bottom:5px;margin-bottom:8px}
+label{display:block;font-size:11px;color:var(--dim);margin:7px 0 3px}
+input,select,textarea{width:100%;background:var(--panel2);border:1px solid var(--bd);color:var(--tx);padding:9px;font-family:inherit;font-size:13px;border-radius:2px}
+textarea{min-height:54px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ac)}
+.row{display:flex;gap:8px;align-items:end}.row>*{flex:1}
+.btn{width:100%;margin-top:8px;border:none;background:var(--ac);color:#000;font-family:inherit;font-size:12px;font-weight:bold;letter-spacing:1px;padding:10px 12px;border-radius:2px;cursor:pointer}
+.btn:active{opacity:.82}.btn.gr{background:var(--gr);color:#fff}.btn.bl{background:var(--bl);color:#fff}.btn.rd{background:var(--rd);color:#fff}.btn.gy{background:#333;color:var(--tx)}
+.btn.sm{width:auto;margin:0;padding:7px 10px;font-size:11px}
+.seg{display:flex;gap:4px;margin-bottom:8px}
+.seg button{flex:1;background:var(--panel2);border:1px solid var(--bd);color:var(--dim);font-family:inherit;font-size:12px;padding:8px;border-radius:2px;cursor:pointer}
+.seg button.on{color:#000;background:var(--ac);border-color:var(--ac);font-weight:bold}
+.presets{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.presets button{background:var(--panel2);border:1px solid var(--bd);color:var(--tx);font-family:inherit;font-size:11px;padding:6px 8px;border-radius:2px;cursor:pointer}
+.presets button:active{border-color:var(--ac);color:var(--ac)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;color:var(--ac);border-bottom:1px solid var(--bd);padding:6px 4px;white-space:nowrap}
+td{padding:6px 4px;border-bottom:1px solid #222;vertical-align:middle}
+td input{padding:6px;font-size:12px}
+.badge{display:inline-block;padding:2px 6px;border-radius:2px;font-size:10px;font-weight:bold;color:#fff;white-space:nowrap}
+.b-wax{background:#5d4037}.b-filler{background:#33691e}.b-binder{background:#4a148c}.b-additive{background:#01579b}.b-dye{background:#880e4f}.b-fragrance{background:#1b5e20}.b-wick{background:var(--or)}.b-packaging{background:#37474f}.b-base{background:#00695c}.b-vessel{background:#455a64}.b-stick{background:#6d4c41}.b-decor{background:#ad1457}.b-body{background:#3e2723}
+.result-box{display:none;background:#0a0a0a;border:2px solid var(--ac);border-radius:4px;padding:12px;margin-top:10px}
+.result-box h4{color:var(--ac);margin-bottom:8px;font-size:13px}
+.rr{display:flex;justify-content:space-between;gap:10px;padding:3px 0;font-size:12px}
+.rr .v{color:#fff;font-weight:bold;text-align:right}
+.warn{color:var(--ac)}.err{color:var(--rd)}.ok{color:var(--gr)}
+.del{background:none;border:none;color:var(--rd);font-size:17px;cursor:pointer;padding:0 4px}
+.empty{color:var(--dim);font-style:italic;text-align:center;padding:14px}
+.small{font-size:11px;color:var(--dim)}
+.cav{border:1px dashed var(--bd);border-radius:4px;padding:8px;margin-bottom:8px;background:#0e0e0e}
+.cav-h{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--ac);margin-bottom:4px}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--gr);color:#fff;padding:10px 16px;border-radius:4px;font-size:12px;z-index:999;display:none;max-width:92vw;text-align:center}
+@media(min-width:700px){.tab{max-width:760px;margin:0 auto}}
+</style>
 </head>
 <body>
-  <header>
-    <div>
-      <h1>MZG CRAFT CALC</h1>
-      <div class="sub">Малые партии · свечи · кашпо · гейзерные модули</div>
-    </div>
-    <div class="sub">IndexedDB · offline</div>
-  </header>
-
-  <nav>
-    <button class="active" data-tab="calc" onclick="showTab('calc')">Калькулятор</button>
-    <button data-tab="materials" onclick="showTab('materials')">Материалы</button>
-    <button data-tab="recipes" onclick="showTab('recipes')">Рецепты</button>
-    <button data-tab="settings" onclick="showTab('settings')">Настройки</button>
-  </nav>
-
-  <!-- CALCULATOR -->
-  <section id="tab-calc" class="tab active">
-    <div class="card">
-      <h3>Партия</h3>
-      <label>Название рецепта</label>
-      <input id="recipeName" placeholder="Например: MZGdonut v2.2 Anti-Mosquito" />
-
-      <div class="row">
-        <div>
-          <label>Тип</label>
-          <select id="productType">
-            <option value="candle">Свеча</option>
-            <option value="planter">Кашпо</option>
-            <option value="hybrid">Гейзер / гибрид</option>
-            <option value="other">Другое</option>
-          </select>
-        </div>
-        <div>
-          <label>Масса партии, г</label>
-          <input id="batchMass" type="number" min="1" step="1" value="1000" />
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <label>Масса 1 изделия, г</label>
-          <input id="itemWeight" type="number" min="0" step="1" value="100" />
-        </div>
-        <div>
-          <label>Потери, %</label>
-          <input id="wastePct" type="number" min="0" max="100" step="0.1" value="5" />
-        </div>
-      </div>
-
-      <label>Примечание</label>
-      <textarea id="recipeNotes" placeholder="Форма, температура заливки, время полимеризации, QC-метка..."></textarea>
-
-      <div class="row">
-        <button class="btn gray" onclick="clearRecipe()">Новая</button>
-        <button class="btn blue" onclick="normalizePercent()">Нормализовать 100%</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>Добавить компонент</h3>
-      <label>Материал</label>
-      <select id="calcMaterial" onchange="updateComponentMode()"></select>
-
-      <div class="row">
-        <div>
-          <label>Режим</label>
-          <select id="compMode">
-            <option value="percent">% массы</option>
-            <option value="perItem">на изделие</option>
-          </select>
-        </div>
-        <div>
-          <label>Значение</label>
-          <input id="compValue" type="number" min="0" step="0.1" value="10" />
-        </div>
-      </div>
-
-      <button class="btn" onclick="addComponent()">Добавить</button>
-    </div>
-
-    <div class="card">
-      <h3>Состав</h3>
-      <div id="componentList"><div class="empty">Компоненты не добавлены</div></div>
-      <div id="totalPercent" class="small" style="text-align:right;margin-top:6px;"></div>
-    </div>
-
-    <button class="btn green" onclick="calculateBatch()">Рассчитать</button>
-    <button class="btn blue" onclick="saveRecipe()">Сохранить рецепт</button>
-
-    <div id="resultBox" class="result-box">
-      <h4>Результат</h4>
-      <div id="resultContent"></div>
-    </div>
-  </section>
-
-  <!-- MATERIALS -->
-  <section id="tab-materials" class="tab">
-    <div class="card">
-      <h3>Поиск</h3>
-      <div class="row">
-        <div style="flex:2">
-          <input id="matSearch" placeholder="Название, категория, примечание..." oninput="renderMaterials()" />
-        </div>
-        <div>
-          <select id="matFilter" onchange="renderMaterials()">
-            <option value="">Все категории</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3 id="matFormTitle">Новый материал</h3>
-      <input type="hidden" id="editingMaterialId" value="" />
-
-      <label>Название</label>
-      <input id="newMatName" placeholder="Например: Парафин П-2" />
-
-      <div class="row">
-        <div>
-          <label>Категория</label>
-          <select id="newMatCat"></select>
-        </div>
-        <div>
-          <label>Ед.</label>
-          <select id="newMatUnit">
-            <option value="кг">кг</option>
-            <option value="г">г</option>
-            <option value="л">л</option>
-            <option value="мл">мл</option>
-            <option value="шт">шт</option>
-            <option value="м">м</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <label>Цена, грн / ед.</label>
-          <input id="newMatPrice" type="number" min="0" step="0.01" value="0" />
-        </div>
-      </div>
-
-      <label>Примечание</label>
-      <input id="newMatNote" placeholder="Например: t° плавления 52–54°C" />
-
-      <div class="row">
-        <button class="btn" onclick="saveMaterial()">Сохранить</button>
-        <button class="btn gray" onclick="cancelEditMaterial()">Отменить</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>База материалов: <span id="matCount">0</span></h3>
-      <div id="materialList"></div>
-    </div>
-  </section>
-
-  <!-- RECIPES -->
-  <section id="tab-recipes" class="tab">
-    <div class="card">
-      <h3>Сохраненные рецепты</h3>
-      <div id="recipeList"><div class="empty">Нет сохраненных рецептов</div></div>
-    </div>
-  </section>
-
-  <!-- SETTINGS -->
-  <section id="tab-settings" class="tab">
-    <div class="card">
-      <h3>Цеховые параметры</h3>
-      <div class="row">
-        <div>
-          <label>Потери по умолчанию, %</label>
-          <input id="setWaste" type="number" min="0" max="100" step="0.1" value="5" />
-        </div>
-        <div>
-          <label>Энергия на партию, грн</label>
-          <input id="setEnergy" type="number" min="0" step="0.1" value="0" />
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <label>Труд на партию, грн</label>
-          <input id="setLabor" type="number" min="0" step="0.1" value="0" />
-        </div>
-        <div>
-          <label>QC на изделие, грн</label>
-          <input id="setQcFee" type="number" min="0" step="0.01" value="0.35" />
-        </div>
-      </div>
-
-      <label>Роялти / внутренний сбор, %</label>
-      <input id="setRoyalty" type="number" min="0" max="100" step="0.1" value="15" />
-
-      <button class="btn" onclick="saveSettings()">Сохранить настройки</button>
-    </div>
-
-    <div class="card">
-      <h3>Резервные копии</h3>
-      <button class="btn blue" onclick="exportAll()">Экспорт JSON</button>
-      <button class="btn" onclick="document.getElementById('importFile').click()">Импорт JSON</button>
-      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importAll(event)" />
-      <button class="btn red" onclick="resetDB()">Сброс базы</button>
-    </div>
-
-    <div class="card">
-      <h3>О системе</h3>
-      <div class="small">
-        MZG Craft Calculator v1.0<br />
-        ТОВ "МЗГ СЕРВІС ГРУП" · м. Дніпро<br />
-        PWA · IndexedDB · offline-ready<br />
-        [DB_SNAPSHOT: 2026-04] · цены/тарифы: [VERIFY_EXTERNAL]
-      </div>
-    </div>
-  </section>
-
-  <div id="toast" class="toast"></div>
-
-  <script>
-    const DB_NAME = "MZGCraftCalc";
-    const DB_VER = 1;
-
-    const CATS = {
-      wax: "Воск / основа",
-      filler: "Наполнитель",
-      binder: "Связующее",
-      additive: "Добавка",
-      dye: "Краситель",
-      fragrance: "Ароматизатор",
-      wick: "Фитиль",
-      packaging: "Упаковка / расходник"
-    };
-
-    const BULK_UNITS = ["кг", "г", "л", "мл"];
-
-    let db;
-    let materials = [];
-    let recipes = [];
-    let currentComponents = [];
-    let currentRecipeId = null;
-
-    let settings = {
-      waste: 5,
-      energy: 0,
-      labor: 0,
-      qcFee: 0.35,
-      royalty: 15
-    };
-
-    const DEFAULT_MATERIALS = [
-      { name: "Парафин П-2", cat: "wax", unit: "кг", price: 45, note: "Демо-цена [VERIFY_EXTERNAL]. t° 52–54°C." },
-      { name: "Стеарин Т-12", cat: "wax", unit: "кг", price: 62, note: "Демо-цена [VERIFY_EXTERNAL]. Твёрдость, матовость." },
-      { name: "Соевый воск", cat: "wax", unit: "кг", price: 120, note: "Демо-цена [VERIFY_EXTERNAL]. Эко-линейка." },
-      { name: "Пчелиный воск", cat: "wax", unit: "кг", price: 280, note: "Демо-цена [VERIFY_EXTERNAL]. Premium." },
-      { name: "Микрокристаллический воск", cat: "wax", unit: "кг", price: 95, note: "Демо-цена [VERIFY_EXTERNAL]. Гибкость, адгезия." },
-
-      { name: "Костра конопли 0.3–0.8 мм", cat: "filler", unit: "кг", price: 18, note: "MZGdonut v2.2, обычно 6–8%." },
-      { name: "Костра конопли 1–3 мм", cat: "filler", unit: "кг", price: 15, note: "Крупная фракция для кашпо." },
-      { name: "Древесная мука", cat: "filler", unit: "кг", price: 12, note: "Сосна, фракция до 200 меш." },
-      { name: "Перлит вспученный", cat: "filler", unit: "кг", price: 25, note: "Лёгкость, теплоизоляция." },
-      { name: "Вермикулит", cat: "filler", unit: "кг", price: 30, note: "Огнестойкость, текстура." },
-      { name: "Алюминиевая пудра / порошок", cat: "filler", unit: "кг", price: 180, note: "MZG Front, вторичный алюминий. Требует ТБ." },
-
-      { name: "Цемент Г-66", cat: "binder", unit: "кг", price: 28, note: "Скульптурный гипс / Г-66." },
-      { name: "Огнеупорный цемент", cat: "binder", unit: "кг", price: 55, note: "Высокотемпературные корпуса." },
-      { name: "Эпоксидная смола", cat: "binder", unit: "кг", price: 320, note: "Барьер, пропитка, финиш." },
-      { name: "Жидкое стекло", cat: "binder", unit: "кг", price: 22, note: "Гидроизоляция, связка." },
-      { name: "Sika-полимер / латекс", cat: "binder", unit: "кг", price: 185, note: "Адгезия, эластичность." },
-      { name: "Портландцемент М500", cat: "binder", unit: "кг", price: 18, note: "Базовые кашпо." },
-
-      { name: "TiO2 диоксид титана", cat: "additive", unit: "кг", price: 95, note: "Белый пигмент, UV-стойкость." },
-      { name: "Цитронелла масло", cat: "additive", unit: "л", price: 450, note: "Anti-Mosquito, обычно 2–3%." },
-      { name: "Масло нима", cat: "additive", unit: "л", price: 380, note: "Anti-Mosquito, обычно 1–2%." },
-      { name: "Стеариновая кислота", cat: "additive", unit: "кг", price: 75, note: "Твёрдость, снижение кристаллизации." },
-      { name: "UV-стабилизатор", cat: "additive", unit: "кг", price: 520, note: "Для retail / окна." },
-      { name: "Пластификатор", cat: "additive", unit: "кг", price: 65, note: "Гибкость кашпо." },
-      { name: "Гидрофобизатор", cat: "additive", unit: "л", price: 140, note: "Водоотталкивание поверхности." },
-
-      { name: "Carbon Black", cat: "dye", unit: "кг", price: 110, note: "Чёрный пигмент, 0.5–2%." },
-      { name: "Оксид железа красный", cat: "dye", unit: "кг", price: 85, note: "Кирпич / охра." },
-      { name: "Оксид хрома зелёный", cat: "dye", unit: "кг", price: 150, note: "Камуфляж." },
-      { name: "Ультрамарин", cat: "dye", unit: "кг", price: 130, note: "Синий, 0.3–1%." },
-      { name: "Охра жёлтая", cat: "dye", unit: "кг", price: 65, note: "Натуральные тона." },
-      { name: "Светонакопительный пигмент", cat: "dye", unit: "кг", price: 850, note: "Glow, 3–5%." },
-
-      { name: "Аромат \"Східний Вал\"", cat: "fragrance", unit: "л", price: 680, note: "Premium, 5–7%." },
-      { name: "Аромат \"Карпатський Рейд\"", cat: "fragrance", unit: "л", price: 720, note: "Хвоя / мох, 5–7%." },
-      { name: "Лаванда эфирная", cat: "fragrance", unit: "л", price: 550, note: "3–5%." },
-      { name: "Ваниль ароматизатор", cat: "fragrance", unit: "л", price: 320, note: "4–6%." },
-      { name: "Без аромата", cat: "fragrance", unit: "л", price: 0, note: "Для фронта / нейтральные изделия." },
-
-      { name: "Фитиль хлопок Ø3 мм", cat: "wick", unit: "м", price: 12, note: "Стандарт." },
-      { name: "Фитиль AMSR v2.2 хлопок+стекло", cat: "wick", unit: "м", price: 28, note: "Гейзерные свечи." },
-      { name: "Фитиль деревянный", cat: "wick", unit: "шт", price: 8, note: "Крафт, эффект потрескивания." },
-      { name: "Фитиль Ø5 мм усиленный", cat: "wick", unit: "м", price: 18, note: "Большие диаметры." },
-
-      { name: "Стеклосетка 5×5 мм", cat: "packaging", unit: "м", price: 35, note: "Армирование кашпо." },
-      { name: "Базальтовое волокно", cat: "packaging", unit: "кг", price: 220, note: "Огнестойкое армирование." },
-      { name: "Фибра полипропиленовая 12 мм", cat: "packaging", unit: "кг", price: 145, note: "Кашпо, трещиностойкость." },
-      { name: "Стакан / банка 200 мл", cat: "packaging", unit: "шт", price: 9, note: "Тара под свечу." },
-      { name: "Крышка / декор", cat: "packaging", unit: "шт", price: 4, note: "Финиш." },
-      { name: "Этикетка MZG", cat: "packaging", unit: "шт", price: 2.5, note: "Маркировка." },
-      { name: "Дой-пак 100 мл", cat: "packaging", unit: "шт", price: 6, note: "MZG-WASH / концентраты." }
-    ];
-
-    function openDB() {
-      return new Promise((resolve, reject) => {
-        const req = indexedDB.open(DB_NAME, DB_VER);
-
-        req.onupgradeneeded = (e) => {
-          const d = e.target.result;
-          if (!d.objectStoreNames.contains("materials")) {
-            d.createObjectStore("materials", { keyPath: "id", autoIncrement: true });
-          }
-          if (!d.objectStoreNames.contains("recipes")) {
-            d.createObjectStore("recipes", { keyPath: "id", autoIncrement: true });
-          }
-          if (!d.objectStoreNames.contains("settings")) {
-            d.createObjectStore("settings", { keyPath: "key" });
-          }
-        };
-
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
-      });
-    }
-
-    function dbGetAll(store) {
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction(store, "readonly");
-        const req = tx.objectStore(store).getAll();
-        req.onsuccess = () => resolve(req.result || []);
-        req.onerror = () => reject(req.error);
-      });
-    }
-
-    function dbGet(store, key) {
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction(store, "readonly");
-        const req = tx.objectStore(store).get(key);
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
-      });
-    }
-
-    function dbPut(store, value) {
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction(store, "readwrite");
-        const req = tx.objectStore(store).put(value);
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
-      });
-    }
-
-    function dbDelete(store, key) {
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction(store, "readwrite");
-        const req = tx.objectStore(store).delete(key);
-        req.onsuccess = () => resolve(true);
-        req.onerror = () => reject(req.error);
-      });
-    }
-
-    function dbClear(store) {
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction(store, "readwrite");
-        const req = tx.objectStore(store).clear();
-        req.onsuccess = () => resolve(true);
-        req.onerror = () => reject(req.error);
-      });
-    }
-
-    async function init() {
-      db = await openDB();
-
-      materials = await dbGetAll("materials");
-      if (materials.length === 0) {
-        for (const m of DEFAULT_MATERIALS) await dbPut("materials", m);
-        materials = await dbGetAll("materials");
-      }
-
-      recipes = await dbGetAll("recipes");
-
-      const s = await dbGet("settings", "main");
-      if (s) settings = { ...settings, ...s };
-
-      buildCategorySelects();
-      applySettings();
-      document.getElementById("wastePct").value = settings.waste;
-      renderAll();
-      registerSW();
-    }
-
-    function buildCategorySelects() {
-      const filter = document.getElementById("matFilter");
-      const newCat = document.getElementById("newMatCat");
-
-      filter.innerHTML = `<option value="">Все категории</option>` +
-        Object.entries(CATS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("");
-
-      newCat.innerHTML = Object.entries(CATS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("");
-    }
-
-    function applySettings() {
-      document.getElementById("setWaste").value = settings.waste;
-      document.getElementById("setEnergy").value = settings.energy;
-      document.getElementById("setLabor").value = settings.labor;
-      document.getElementById("setQcFee").value = settings.qcFee;
-      document.getElementById("setRoyalty").value = settings.royalty;
-    }
-
-    function showTab(name) {
-      document.querySelectorAll(".tab").forEach(t => {
-        t.classList.toggle("active", t.id === "tab-" + name);
-      });
-
-      document.querySelectorAll("nav button").forEach(b => {
-        b.classList.toggle("active", b.dataset.tab === name);
-      });
-
-      if (name === "recipes") renderRecipes();
-      if (name === "materials") renderMaterials();
-      if (name === "calc") renderMaterialSelect();
-    }
-
-    function escapeHtml(str) {
-      return String(str ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    function toast(msg) {
-      const t = document.getElementById("toast");
-      t.textContent = msg;
-      t.style.display = "block";
-      clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => t.style.display = "none", 2600);
-    }
-
-    function getMaterialById(id) {
-      return materials.find(m => m.id === Number(id));
-    }
-
-    function isBulkUnit(unit) {
-      return BULK_UNITS.includes(unit);
-    }
-
-    function pricePerGram(mat) {
-      if (!mat) return 0;
-      if (mat.unit === "кг" || mat.unit === "л") return mat.price / 1000;
-      if (mat.unit === "г" || mat.unit === "мл") return mat.price;
-      return 0;
-    }
-
-    function renderAll() {
-      renderMaterialSelect();
-      renderMaterials();
-      renderComponents();
-      renderRecipes();
-    }
-
-    function renderMaterialSelect() {
-      const sel = document.getElementById("calcMaterial");
-      const grouped = {};
-
-      materials.forEach(m => {
-        grouped[m.cat] = grouped[m.cat] || [];
-        grouped[m.cat].push(m);
-      });
-
-      sel.innerHTML = Object.keys(CATS)
-        .filter(cat => grouped[cat]?.length)
-        .map(cat => {
-          const opts = grouped[cat]
-            .map(m => `<option value="${m.id}">${escapeHtml(m.name)} · ${m.price} грн/${m.unit}</option>`)
-            .join("");
-          return `<optgroup label="${CATS[cat]}">${opts}</optgroup>`;
-        })
-        .join("");
-
-      updateComponentMode();
-    }
-
-    function updateComponentMode() {
-      const mat = getMaterialById(document.getElementById("calcMaterial").value);
-      const modeSel = document.getElementById("compMode");
-      const valInput = document.getElementById("compValue");
-
-      const percentOpt = modeSel.querySelector('option[value="percent"]');
-      const perItemOpt = modeSel.querySelector('option[value="perItem"]');
-
-      if (!mat) {
-        percentOpt.disabled = false;
-        perItemOpt.disabled = false;
-        return;
-      }
-
-      const bulk = isBulkUnit(mat.unit);
-      percentOpt.disabled = !bulk;
-
-      if (!bulk) {
-        modeSel.value = "perItem";
-        valInput.placeholder = "Например: 1 шт или 0.2 м";
-        valInput.step = "0.01";
-      } else {
-        if (modeSel.value === "perItem" && !bulk) modeSel.value = "percent";
-        if (!modeSel.value) modeSel.value = "percent";
-        valInput.placeholder = "Например: 6.5";
-        valInput.step = "0.1";
-      }
-    }
-
-    function addComponent() {
-      const matId = Number(document.getElementById("calcMaterial").value);
-      const mode = document.getElementById("compMode").value;
-      const value = parseFloat(document.getElementById("compValue").value);
-
-      const mat = getMaterialById(matId);
-      if (!mat) return toast("Выбери материал");
-      if (!Number.isFinite(value) || value <= 0) return toast("Введи положительное значение");
-
-      if (mode === "percent" && !isBulkUnit(mat.unit)) {
-        return toast("Для шт/м используй режим «на изделие»");
-      }
-
-      const existing = currentComponents.find(c => c.materialId === mat.id && c.mode === mode);
-      if (existing) {
-        existing.value += value;
-      } else {
-        currentComponents.push({
-          materialId: mat.id,
-          name: mat.name,
-          unit: mat.unit,
-          price: mat.price,
-          cat: mat.cat,
-          mode,
-          value
-        });
-      }
-
-      document.getElementById("compValue").value = mode === "percent" ? 10 : 1;
-      renderComponents();
-      toast("Компонент добавлен");
-    }
-
-    function updateComponent(index, value) {
-      const v = parseFloat(value);
-      currentComponents[index].value = Number.isFinite(v) && v >= 0 ? v : 0;
-      renderComponents();
-    }
-
-    function removeComponent(index) {
-      currentComponents.splice(index, 1);
-      renderComponents();
-    }
-
-    function calcPieces() {
-      const batch = parseFloat(document.getElementById("batchMass").value) || 0;
-      const item = parseFloat(document.getElementById("itemWeight").value) || 0;
-      const wasteRaw = parseFloat(document.getElementById("wastePct").value);
-      const waste = Number.isFinite(wasteRaw) ? wasteRaw : settings.waste;
-
-      if (batch <= 0) return 0;
-      const useful = batch * Math.max(0, 1 - waste / 100);
-
-      if (item <= 0) return 1;
-      return Math.max(0, Math.floor(useful / item));
-    }
-
-    function renderComponents() {
-      const el = document.getElementById("componentList");
-      const totalEl = document.getElementById("totalPercent");
-
-      if (!currentComponents.length) {
-        el.innerHTML = `<div class="empty">Компоненты не добавлены</div>`;
-        totalEl.innerHTML = "";
-        document.getElementById("resultBox").style.display = "none";
-        return;
-      }
-
-      const batch = parseFloat(document.getElementById("batchMass").value) || 0;
-      const pieces = calcPieces();
-      let totalPercent = 0;
-
-      const rows = currentComponents.map((c, i) => {
-        const mat = getMaterialById(c.materialId) || c;
-        let detail = "";
-
-        if (c.mode === "percent") {
-          totalPercent += c.value;
-          const mass = batch * c.value / 100;
-          const cost = mass * pricePerGram(mat);
-          detail = `${mass.toFixed(1)} г · ${cost.toFixed(2)} грн`;
-        } else {
-          const costItem = c.value * mat.price;
-          const costBatch = costItem * pieces;
-          detail = `${costItem.toFixed(2)} грн/шт · партия ${costBatch.toFixed(2)} грн`;
-        }
-
-        return `
-          <tr>
-            <td>
-              <b>${escapeHtml(c.name)}</b><br />
-              <span class="small">${CATS[c.cat] || c.cat} · ${mat.price} грн/${mat.unit}</span>
-            </td>
-            <td>${c.mode === "percent" ? "%" : "шт/м"}</td>
-            <td>
-              <input type="number" min="0" step="${c.mode === "percent" ? "0.1" : "0.01"}"
-                value="${c.value}" onchange="updateComponent(${i}, this.value)" />
-            </td>
-            <td class="small">${detail}</td>
-            <td><button class="del" onclick="removeComponent(${i})">×</button></td>
-          </tr>
-        `;
-      }).join("");
-
-      el.innerHTML = `
-        <table>
-          <thead>
-            <tr>
-              <th>Материал</th>
-              <th>Режим</th>
-              <th>Значение</th>
-              <th>Расход</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-      `;
-
-      const cls = totalPercent > 100.5 ? "error" : Math.abs(totalPercent - 100) <= 0.5 ? "ok" : "warn";
-      const hint = totalPercent > 100.5 ? "превышение" : totalPercent < 99.5 ? "неполно" : "норма";
-      totalEl.innerHTML = `Массовые компоненты: <b class="${cls}">${totalPercent.toFixed(2)}%</b> · ${hint}`;
-    }
-
-    function normalizePercent() {
-      const percentItems = currentComponents.filter(c => c.mode === "percent");
-      const sum = percentItems.reduce((s, c) => s + c.value, 0);
-
-      if (sum <= 0) return toast("Нет %-компонентов");
-      const factor = 100 / sum;
-
-      percentItems.forEach(c => {
-        c.value = Number((c.value * factor).toFixed(3));
-      });
-
-      renderComponents();
-      toast("Проценты нормализованы к 100%");
-    }
-
-    function calculateBatch() {
-      if (!currentComponents.length) return toast("Добавь компоненты");
-
-      const batch = parseFloat(document.getElementById("batchMass").value) || 0;
-      if (batch <= 0) return toast("Укажи массу партии");
-
-      const itemWeight = parseFloat(document.getElementById("itemWeight").value) || 0;
-      const wasteRaw = parseFloat(document.getElementById("wastePct").value);
-      const waste = Number.isFinite(wasteRaw) ? wasteRaw : settings.waste;
-
-      const pieces = calcPieces();
-      const usefulMass = batch * Math.max(0, 1 - waste / 100);
-
-      let totalPercent = 0;
-      let bulkCost = 0;
-      let consumableCostPerItem = 0;
-
-      const lines = currentComponents.map(c => {
-        const mat = getMaterialById(c.materialId) || c;
-
-        if (c.mode === "percent") {
-          totalPercent += c.value;
-          const mass = batch * c.value / 100;
-          const cost = mass * pricePerGram(mat);
-          bulkCost += cost;
-          return `
-            <div class="result-row">
-              <span>${escapeHtml(c.name)} · ${c.value}%</span>
-              <span class="val">${mass.toFixed(1)} г · ${cost.toFixed(2)} грн</span>
-            </div>
-          `;
-        } else {
-          const costItem = c.value * mat.price;
-          consumableCostPerItem += costItem;
-          const costBatch = costItem * pieces;
-          return `
-            <div class="result-row">
-              <span>${escapeHtml(c.name)} · ${c.value} ${mat.unit}/шт</span>
-              <span class="val">${costItem.toFixed(2)} грн/шт · ${costBatch.toFixed(2)} грн</span>
-            </div>
-          `;
-        }
-      }).join("");
-
-      if (totalPercent > 100.5) {
-        return toast("Сумма % больше 100. Исправь состав.");
-      }
-
-      const consumableBatchCost = consumableCostPerItem * pieces;
-      const rawCost = bulkCost + consumableBatchCost;
-
-      const energy = parseFloat(document.getElementById("setEnergy").value) || settings.energy;
-      const labor = parseFloat(document.getElementById("setLabor").value) || settings.labor;
-      const qcFee = parseFloat(document.getElementById("setQcFee").value) || settings.qcFee;
-      const royaltyPct = parseFloat(document.getElementById("setRoyalty").value) || settings.royalty;
-
-      const qcBatch = qcFee * pieces;
-      const overhead = energy + labor + qcBatch;
-      const royalty = rawCost * royaltyPct / 100;
-      const cogs = rawCost + overhead + royalty;
-      const costPerItem = pieces > 0 ? cogs / pieces : 0;
-
-      const percentStatus = totalPercent > 100.5
-        ? `<span class="error">Состав превышает 100%</span>`
-        : totalPercent < 99.5
-          ? `<span class="warn">Состав меньше 100%: ${totalPercent.toFixed(2)}%</span>`
-          : `<span class="ok">Состав ≈ 100%</span>`;
-
-      document.getElementById("resultContent").innerHTML = `
-        ${lines}
-        <hr style="border-color:#333;margin:8px 0" />
-        <div class="result-row"><span>Полезная масса после потерь</span><span class="val">${usefulMass.toFixed(1)} г</span></div>
-        <div class="result-row"><span>Изделий</span><span class="val">${pieces}</span></div>
-        <div class="result-row"><span>Себестоимость сырья</span><span class="val">${rawCost.toFixed(2)} грн</span></div>
-        <div class="result-row"><span>Энергия + труд + QC</span><span class="val">${overhead.toFixed(2)} грн</span></div>
-        <div class="result-row"><span>Роялти ${royaltyPct}%</span><span class="val">${royalty.toFixed(2)} грн</span></div>
-        <div class="result-row" style="font-size:14px"><span><b>COGS партии</b></span><span class="val" style="color:var(--accent)">${cogs.toFixed(2)} грн</span></div>
-        <div class="result-row"><span>COGS на изделие</span><span class="val">${pieces > 0 ? costPerItem.toFixed(2) + " грн" : "—"}</span></div>
-        <div class="result-row"><span>${percentStatus}</span><span></span></div>
-      `;
-
-      document.getElementById("resultBox").style.display = "block";
-      toast("Расчёт выполнен");
-    }
-
-    function clearRecipe() {
-      currentRecipeId = null;
-      currentComponents = [];
-      document.getElementById("recipeName").value = "";
-      document.getElementById("productType").value = "candle";
-      document.getElementById("batchMass").value = 1000;
-      document.getElementById("itemWeight").value = 100;
-      document.getElementById("wastePct").value = settings.waste;
-      document.getElementById("recipeNotes").value = "";
-      document.getElementById("resultBox").style.display = "none";
-      renderComponents();
-      toast("Новая рецептура");
-    }
-
-    async function saveRecipe() {
-      const name = document.getElementById("recipeName").value.trim();
-      if (!name) return toast("Введи название рецепта");
-      if (!currentComponents.length) return toast("Добавь компоненты");
-
-      const payload = {
-        name,
-        type: document.getElementById("productType").value,
-        batch: parseFloat(document.getElementById("batchMass").value) || 0,
-        itemWeight: parseFloat(document.getElementById("itemWeight").value) || 0,
-        waste: parseFloat(document.getElementById("wastePct").value) || settings.waste,
-        notes: document.getElementById("recipeNotes").value.trim(),
-        components: JSON.parse(JSON.stringify(currentComponents)),
-        updatedAt: new Date().toISOString()
-      };
-
-      if (currentRecipeId) payload.id = currentRecipeId;
-      else payload.createdAt = payload.updatedAt;
-
-      const key = await dbPut("recipes", payload);
-      if (!currentRecipeId) currentRecipeId = key;
-
-      recipes = await dbGetAll("recipes");
-      renderRecipes();
-      toast("Рецепт сохранен");
-    }
-
-    function renderRecipes() {
-      const el = document.getElementById("recipeList");
-
-      if (!recipes.length) {
-        el.innerHTML = `<div class="empty">Нет сохраненных рецептов</div>`;
-        return;
-      }
-
-      const typeNames = {
-        candle: "Свеча",
-        planter: "Кашпо",
-        hybrid: "Гейзер / гибрид",
-        other: "Другое"
-      };
-
-      const sorted = [...recipes].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-
-      el.innerHTML = sorted.map(r => {
-        const d = new Date(r.updatedAt).toLocaleString("ru-RU");
-        const compSummary = r.components.slice(0, 5).map(c => `${c.name}: ${c.mode === "percent" ? c.value + "%" : c.value + " шт/м"}`).join(" · ");
-        const more = r.components.length > 5 ? ` · ещё ${r.components.length - 5}` : "";
-
-        return `
-          <div class="card recipe-card">
-            <div class="recipe-head">
-              <div>
-                <b style="color:var(--accent)">${escapeHtml(r.name)}</b><br />
-                <span class="small">${typeNames[r.type] || r.type} · ${r.batch} г · ${d}</span>
-              </div>
-              <div class="recipe-actions">
-                <button class="btn sm blue" onclick="loadRecipe(${r.id})">Загрузить</button>
-                <button class="btn sm" onclick="duplicateRecipe(${r.id})">Копия</button>
-                <button class="btn sm red" onclick="deleteRecipe(${r.id})">Удалить</button>
-              </div>
-            </div>
-            <div class="small" style="margin-top:8px">${escapeHtml(compSummary)}${more}</div>
-          </div>
-        `;
-      }).join("");
-    }
-
-    async function loadRecipe(id) {
-      const r = recipes.find(x => x.id === id);
-      if (!r) return;
-
-      currentRecipeId = r.id;
-      currentComponents = JSON.parse(JSON.stringify(r.components || []));
-
-      document.getElementById("recipeName").value = r.name || "";
-      document.getElementById("productType").value = r.type || "candle";
-      document.getElementById("batchMass").value = r.batch || 1000;
-      document.getElementById("itemWeight").value = r.itemWeight || 0;
-      document.getElementById("wastePct").value = r.waste ?? settings.waste;
-      document.getElementById("recipeNotes").value = r.notes || "";
-
-      renderComponents();
-      showTab("calc");
-      toast("Рецепт загружен");
-    }
-
-    async function duplicateRecipe(id) {
-      const r = recipes.find(x => x.id === id);
-      if (!r) return;
-
-      const payload = {
-        ...r,
-        id: undefined,
-        name: r.name + " (копия)",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        components: JSON.parse(JSON.stringify(r.components || []))
-      };
-
-      await dbPut("recipes", payload);
-      recipes = await dbGetAll("recipes");
-      renderRecipes();
-      toast("Копия создана");
-    }
-
-    async function deleteRecipe(id) {
-      if (!confirm("Удалить рецепт?")) return;
-      await dbDelete("recipes", id);
-      recipes = await dbGetAll("recipes");
-      if (currentRecipeId === id) currentRecipeId = null;
-      renderRecipes();
-      toast("Рецепт удален");
-    }
-
-    function renderMaterials() {
-      const q = document.getElementById("matSearch").value.toLowerCase().trim();
-      const cat = document.getElementById("matFilter").value;
-
-      const filtered = materials.filter(m => {
-        const hay = `${m.name} ${m.note || ""} ${CATS[m.cat] || m.cat}`.toLowerCase();
-        return (!q || hay.includes(q)) && (!cat || m.cat === cat);
-      });
-
-      document.getElementById("matCount").textContent = materials.length;
-
-      const el = document.getElementById("materialList");
-      if (!filtered.length) {
-        el.innerHTML = `<div class="empty">Не найдено</div>`;
-        return;
-      }
-
-      el.innerHTML = `
-        <table>
-          <thead>
-            <tr>
-              <th>Материал</th>
-              <th>Категория</th>
-              <th>Цена</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            ${filtered.map(m => `
-              <tr>
-                <td>
-                  <b>${escapeHtml(m.name)}</b><br />
-                  <span class="small">${escapeHtml(m.note || "")}</span>
-                </td>
-                <td><span class="badge ${m.cat}">${CATS[m.cat] || m.cat}</span></td>
-                <td>${m.price} грн/${m.unit}</td>
-                <td style="white-space:nowrap">
-                  <button class="btn sm blue" onclick="editMaterial(${m.id})">Изм.</button>
-                  <button class="del" onclick="deleteMaterial(${m.id})">×</button>
-                </td>
-              </tr>
-            `).join("")}
-          </tbody>
-        </table>
-      `;
-    }
-
-    function saveMaterial() {
-      const name = document.getElementById("newMatName").value.trim();
-      if (!name) return toast("Введи название материала");
-
-      const payload = {
-        name,
-        cat: document.getElementById("newMatCat").value,
-        unit: document.getElementById("newMatUnit").value,
-        price: parseFloat(document.getElementById("newMatPrice").value) || 0,
-        note: document.getElementById("newMatNote").value.trim()
-      };
-
-      const editingId = document.getElementById("editingMaterialId").value;
-      if (editingId) payload.id = Number(editingId);
-
-      dbPut("materials", payload).then(async () => {
-        materials = await dbGetAll("materials");
-        cancelEditMaterial();
-        renderAll();
-        toast(editingId ? "Материал обновлен" : "Материал добавлен");
-      });
-    }
-
-    function editMaterial(id) {
-      const m = getMaterialById(id);
-      if (!m) return;
-
-      document.getElementById("editingMaterialId").value = m.id;
-      document.getElementById("newMatName").value = m.name;
-      document.getElementById("newMatCat").value = m.cat;
-      document.getElementById("newMatUnit").value = m.unit;
-      document.getElementById("newMatPrice").value = m.price;
-      document.getElementById("newMatNote").value = m.note || "";
-      document.getElementById("matFormTitle").textContent = "Редактирование материала";
-      showTab("materials");
-    }
-
-    function cancelEditMaterial() {
-      document.getElementById("editingMaterialId").value = "";
-      document.getElementById("newMatName").value = "";
-      document.getElementById("newMatCat").value = "wax";
-      document.getElementById("newMatUnit").value = "кг";
-      document.getElementById("newMatPrice").value = 0;
-      document.getElementById("newMatNote").value = "";
-      document.getElementById("matFormTitle").textContent = "Новый материал";
-    }
-
-    async function deleteMaterial(id) {
-      if (!confirm("Удалить материал? Сохраненные рецепты останутся с историческими данными.")) return;
-      await dbDelete("materials", id);
-      materials = await dbGetAll("materials");
-      renderAll();
-      toast("Материал удален");
-    }
-
-    async function saveSettings() {
-      settings = {
-        waste: parseFloat(document.getElementById("setWaste").value) || 0,
-        energy: parseFloat(document.getElementById("setEnergy").value) || 0,
-        labor: parseFloat(document.getElementById("setLabor").value) || 0,
-        qcFee: parseFloat(document.getElementById("setQcFee").value) || 0,
-        royalty: parseFloat(document.getElementById("setRoyalty").value) || 0
-      };
-
-      await dbPut("settings", { key: "main", ...settings });
-      document.getElementById("wastePct").value = settings.waste;
-      renderComponents();
-      toast("Настройки сохранены");
-    }
-
-    async function exportAll() {
-      const data = {
-        app: "MZG-Craft-Calc",
-        version: "1.0",
-        exportedAt: new Date().toISOString(),
-        materials: await dbGetAll("materials"),
-        recipes: await dbGetAll("recipes"),
-        settings
-      };
-
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = `MZG_Craft_Calc_${new Date().toISOString().slice(0, 10)}.json`;
-      a.click();
-      URL.revokeObjectURL(a.href);
-      toast("Экспорт готов");
-    }
-
-    async function importAll(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      try {
-        const text = await file.text();
-        const data = JSON.parse(text);
-
-        if (!Array.isArray(data.materials)) throw new Error("Неверный формат");
-
-        await dbClear("materials");
-        await dbClear("recipes");
-
-        for (const m of data.materials) await dbPut("materials", m);
-        if (Array.isArray(data.recipes)) {
-          for (const r of data.recipes) await dbPut("recipes", r);
-        }
-
-        if (data.settings) {
-          settings = data.settings;
-          await dbPut("settings", { key: "main", ...settings });
-          applySettings();
-        }
-
-        materials = await dbGetAll("materials");
-        recipes = await dbGetAll("recipes");
-        currentComponents = [];
-        currentRecipeId = null;
-        renderAll();
-        toast("Импорт завершен");
-      } catch (err) {
-        toast("Ошибка импорта: " + err.message);
-      }
-
-      event.target.value = "";
-    }
-
-    async function resetDB() {
-      if (!confirm("Сбросить базу? Будут удалены все пользовательские материалы и рецепты.")) return;
-      if (!confirm("Точно? Сделай экспорт перед сбросом.")) return;
-
-      await dbClear("materials");
-      await dbClear("recipes");
-      await dbClear("settings");
-
-      for (const m of DEFAULT_MATERIALS) await dbPut("materials", m);
-
-      materials = await dbGetAll("materials");
-      recipes = [];
-      currentComponents = [];
-      currentRecipeId = null;
-
-      settings = { waste: 5, energy: 0, labor: 0, qcFee: 0.35, royalty: 15 };
-      await dbPut("settings", { key: "main", ...settings });
-
-      applySettings();
-      document.getElementById("wastePct").value = settings.waste;
-      renderAll();
-      toast("База сброшена");
-    }
-
-    async function registerSW() {
-      if (!("serviceWorker" in navigator)) return;
-
-      if (location.protocol === "file:") {
-        toast("Для установки открой через HTTPS или localhost");
-        return;
-      }
-
-      try {
-        const reg = await navigator.serviceWorker.register("./sw.js");
-
-        if (reg.waiting) {
-          reg.waiting.postMessage({ type: "SKIP_WAITING" });
-        }
-
-        navigator.serviceWorker.addEventListener("controllerchange", () => {
-          if (window.__swRefreshing) return;
-          window.__swRefreshing = true;
-          location.reload();
-        });
-      } catch (err) {
-        console.warn("SW registration failed:", err);
-      }
-    }
-
-    init().catch(err => {
-      console.error(err);
-      toast("Ошибка инициализации: " + err.message);
-    });
-  </script>
+<header><div><h1>MZG CRAFT CALC</h1><div class="sub">v1.2 · геометрия · стек слоёв · MZX-база</div></div><div class="sub">IndexedDB · offline</div></header>
+<nav>
+<button class="active" data-tab="calc" onclick="showTab('calc')">Калькулятор</button>
+<button data-tab="materials" onclick="showTab('materials')">Материалы</button>
+<button data-tab="recipes" onclick="showTab('recipes')">Рецепты</button>
+<button data-tab="settings" onclick="showTab('settings')">Настройки</button>
+</nav>
+
+<section id="tab-calc" class="tab active">
+<div class="card">
+<h3>Изделие</h3>
+<label>Название</label><input id="rName" placeholder="напр. Чайное кашпо 120/40/24">
+<div class="seg">
+<button id="mMass" class="on" onclick="setMode('mass')">По массе</button>
+<button id="mGeom" onclick="setMode('geom')">По геометрии</button>
+</div>
+<div class="presets">
+<button onclick="preset('double')">Двойная свеча</button>
+<button onclick="preset('tea')">Кашпо чайное</button>
+<button onclick="preset('tablet')">Таблетка</button>
+<button onclick="preset('dbath')">Диффузор ванна</button>
+<button onclick="preset('dvessel')">Диффузор пузырёк</button>
+<button onclick="preset('combo')">Комбо свеча+диф</button>
+<button onclick="preset('sub')">Цоколь</button>
+</div>
+<div id="massFields">
+<div class="row"><div><label>Тип</label><select id="pType"><option value="candle">Свеча</option><option value="planter">Кашпо</option><option value="hybrid">Гейзер</option><option value="diffuser">Диффузор</option><option value="other">Другое</option></select></div><div><label>Масса партии, г</label><input id="batch" type="number" min="1" value="1000"></div></div>
+<div class="row"><div><label>Масса 1 изделия, г</label><input id="itemW" type="number" min="0" value="100"></div><div><label>Потери, %</label><input id="waste" type="number" min="0" max="100" step="0.1" value="5"></div></div>
+</div>
+<div id="geomFields" style="display:none">
+<div class="row"><div><label>Тип</label><select id="gType"><option value="planter">Кашпо</option><option value="tablet">Таблетка</option><option value="diffuser">Диффузор</option><option value="combo">Комбо</option><option value="sub">Цоколь</option></select></div><div><label>Кол-во изделий, шт</label><input id="gQty" type="number" min="1" value="1"></div></div>
+<div class="row"><div><label>D наружный, мм</label><input id="gDout" type="number" min="0" value="70"></div><div><label>H общая, мм</label><input id="gH" type="number" min="0" value="120"></div></div>
+<label>Матрица тела</label><select id="gBody"></select>
+<div class="row"><div><label>Core-Insert t стенки, мм</label><input id="gWall" type="number" min="0" value="0"></div><div style="flex:0 0 auto"><label>&nbsp;</label><button class="btn sm gy" onclick="coreApply()">Применить</button></div></div>
+<div class="small">Core-Insert: D выемки = D_out − 2·t (только цилиндр). 0 = ручной ввод.</div>
+</div>
+<label>Примечание</label><textarea id="rNotes" placeholder="форма, t° заливки, полимеризация, QC, тест фитиля..."></textarea>
+<div class="row"><button class="btn gy" onclick="clearRecipe()">Новая</button><button class="btn bl" onclick="normalizePercent()">Норм. 100%</button></div>
+</div>
+
+<div class="card" id="cavCard" style="display:none">
+<h3>Выемки (полости) — каждая вычитается из тела</h3>
+<div id="cavList"></div>
+<button class="btn sm" onclick="addCavity()">+ Выемка</button>
+</div>
+
+<div class="card" id="refillCard" style="display:none">
+<h3>Заправка жидкостью (диффузор)</h3>
+<div class="row"><div><label>Объём, мл</label><input id="rfMl" type="number" min="0" value="100"></div><div><label>% отдушки</label><input id="rfPct" type="number" min="0" max="100" step="0.5" value="25"></div></div>
+<label>База (MZX)</label><select id="rfBase"></select>
+<label>Отдушка</label><select id="rfFrag"></select>
+<div class="small">Подсказка-диапазон 20–30% [VERIFY_EXTERNAL]. База = 1 материал, раскладка А/Б/В вне калькулятора.</div>
+</div>
+
+<div class="card">
+<h3>Массовые компоненты (% от массы)</h3>
+<div class="row"><div style="flex:2"><label>Материал</label><select id="mSel"></select></div><div><label>%</label><input id="mVal" type="number" min="0.1" step="0.1" value="10"></div></div>
+<button class="btn sm" onclick="addMass()">+ Добавить</button>
+<div id="massList" style="margin-top:8px"></div>
+<div id="mTotal" class="small" style="text-align:right;margin-top:6px"></div>
+</div>
+
+<div class="card">
+<h3>Расходники на изделие (шт/м или г/мл)</h3>
+<div class="row"><div style="flex:2"><label>Материал</label><select id="cSel"></select></div><div><label>Кол-во</label><input id="cVal" type="number" min="0" step="0.01" value="1"></div></div>
+<button class="btn sm" onclick="addCons()">+ Добавить</button>
+<div id="consList" style="margin-top:8px"></div>
+</div>
+
+<button class="btn gr" onclick="calculate()">Рассчитать</button>
+<button class="btn bl" onclick="saveRecipe()">Сохранить рецепт</button>
+<div id="resultBox" class="result-box"><h4>Результат</h4><div id="resultContent"></div></div>
+</section>
+
+<section id="tab-materials" class="tab">
+<div class="card"><h3>Поиск</h3><div class="row"><div style="flex:2"><input id="mSearch" placeholder="название, категория, примечание..." oninput="renderMats()"></div><div><select id="mFilter" onchange="renderMats()"></select></div></div></div>
+<div class="card"><h3 id="mFormT">Новый материал</h3><input type="hidden" id="mEditId" value="">
+<label>Название</label><input id="nmName" placeholder="напр. Парафин П-2">
+<div class="row"><div><label>Категория</label><select id="nmCat"></select></div><div><label>Ед.</label><select id="nmUnit"><option value="кг">кг</option><option value="г">г</option><option value="л">л</option><option value="мл">мл</option><option value="шт">шт</option><option value="м">м</option></select></div></div>
+<div class="row"><div><label>Цена, грн/ед.</label><input id="nmPrice" type="number" min="0" step="0.01" value="0"></div><div><label>Плотность, г/см³</label><input id="nmDen" type="number" min="0" step="0.01" value="0"></div></div>
+<label>Примечание</label><input id="nmNote" placeholder="t° плавл., поставщик, SDS-статус">
+<div class="row"><button class="btn" onclick="saveMat()">Сохранить</button><button class="btn gy" onclick="cancelMat()">Отменить</button></div>
+<div class="small">Плотность нужна для режима «по геометрии». Калибровка: отмерить объём → взвесить → г/мл. Справочные чистые вещества = подсказка [VERIFY_EXTERNAL].</div>
+</div>
+<div class="card"><h3>База материалов: <span id="mCount">0</span></h3><div id="matList"></div></div>
+</section>
+
+<section id="tab-recipes" class="tab"><div class="card"><h3>Сохранённые рецепты</h3><div id="recList"><div class="empty">Нет рецептов</div></div></div></section>
+
+<section id="tab-settings" class="tab">
+<div class="card"><h3>Цеховые параметры</h3>
+<div class="row"><div><label>Потери по умолч., %</label><input id="sWaste" type="number" min="0" max="100" step="0.1" value="5"></div><div><label>Энергия/партия, грн</label><input id="sEnergy" type="number" min="0" step="0.1" value="0"></div></div>
+<div class="row"><div><label>Труд/партия, грн</label><input id="sLabor" type="number" min="0" step="0.1" value="0"></div><div><label>QC/изделие, грн</label><input id="sQc" type="number" min="0" step="0.01" value="0.35"></div></div>
+<label>Роялти / внутренний сбор, %</label><input id="sRoy" type="number" min="0" max="100" step="0.1" value="15">
+<button class="btn" onclick="saveSet()">Сохранить настройки</button></div>
+<div class="card"><h3>Резервные копии</h3><button class="btn bl" onclick="exportAll()">Экспорт JSON</button><button class="btn" onclick="document.getElementById('impFile').click()">Импорт JSON</button><input type="file" id="impFile" accept=".json" style="display:none" onchange="importAll(event)"><button class="btn rd" onclick="resetDB()">Сброс базы</button></div>
+<div class="card"><h3>О системе</h3><div class="small">MZG Craft Calc v1.2 · ТОВ «МЗГ СЕРВІС ГРУП» · м. Дніпро · ЄДРПОУ 30670104<br>PWA · IndexedDB · offline · [DB_SNAPSHOT 2026-04] · цены/ρ: [VERIFY_EXTERNAL]</div></div>
+</section>
+
+<div id="toast" class="toast"></div>
+<script>
+const DB="MZGCraftCalcV12",VER=1;
+const CATS={wax:"Воск/основа",filler:"Наполнитель",binder:"Связующее",additive:"Добавка",dye:"Краситель",fragrance:"Ароматизатор",wick:"Фитиль",packaging:"Тара/расходник",base:"База жидк.",vessel:"Стакан/пузырёк",stick:"Палочки",decor:"Декор/защита",body:"Матрица тела"};
+const BULK=["кг","г","л","мл"];
+const FILL={none:"пусто",wax:"воск",liquid:"жидкость",absorb:"пропитка"};
+let db,mats=[],recs=[],cur=null,mode="mass",cavs=[],cons=[],massC=[],rf={ml:100,pct:25,base:null,frag:null},geom={dout:70,h:120,body:null,wall:0,qty:1},set={waste:5,energy:0,labor:0,qc:0.35,roy:15};
+const DEF=[
+{name:"Парафин П-2",cat:"wax",unit:"кг",price:45,density:0.90,note:"t°52-54 [VERIFY]"},
+{name:"Стеарин Т-12",cat:"wax",unit:"кг",price:62,density:0.94,note:"твёрдость [VERIFY]"},
+{name:"Соевый воск",cat:"wax",unit:"кг",price:120,density:0.93,note:"эко [VERIFY]"},
+{name:"Пчелиный воск",cat:"wax",unit:"кг",price:280,density:0.96,note:"premium [VERIFY]"},
+{name:"Микрокристалл. воск",cat:"wax",unit:"кг",price:95,density:0.90,note:"гибкость [VERIFY]"},
+{name:"Костра конопли 0.3-0.8",cat:"filler",unit:"кг",price:18,density:0.25,note:"MZGdonut 6-8%"},
+{name:"Костра конопли 1-3",cat:"filler",unit:"кг",price:15,density:0.30,note:"крупная, кашпо"},
+{name:"Вермикулит",cat:"filler",unit:"кг",price:30,density:0.12,note:"термо-дно + пропитка масла"},
+{name:"Перлит вспученный",cat:"filler",unit:"кг",price:25,density:0.11,note:"теплоизоляция"},
+{name:"Мраморная крошка/мука",cat:"filler",unit:"кг",price:22,density:1.50,note:"матрица тела 10%"},
+{name:"Кварцевый песок",cat:"filler",unit:"кг",price:14,density:1.55,note:"замена крошки"},
+{name:"Гипс Г-66",cat:"body",unit:"кг",price:28,density:1.20,note:"матрица 60% [VERIFY]"},
+{name:"Огнеупорный цемент",cat:"body",unit:"кг",price:55,density:1.30,note:"матрица 30%"},
+{name:"Матрица тела (готовая смесь)",cat:"body",unit:"кг",price:34,density:1.25,note:"Г-66+цем+крошка 60/30/10 [VERIFY]"},
+{name:"СВВ-50 / PCE пластификатор",cat:"additive",unit:"кг",price:90,density:1.10,note:"1-1.5% сух.смеси"},
+{name:"Жидкое стекло",cat:"binder",unit:"кг",price:22,density:1.45,note:"изоляция слой1"},
+{name:"Эпоксидка 2к",cat:"binder",unit:"кг",price:320,density:1.15,note:"изоляция слой2, инертность к маслам"},
+{name:"Акриловый лак",cat:"decor",unit:"л",price:140,density:1.05,note:"внешняя защита"},
+{name:"Краска/патина декор",cat:"decor",unit:"кг",price:180,density:1.30,note:"окраска, состаривание"},
+{name:"TiO2",cat:"dye",unit:"кг",price:95,density:2.00,note:"белый UV"},
+{name:"Carbon Black",cat:"dye",unit:"кг",price:110,density:1.80,note:"0.5-2%"},
+{name:"Оксид железа красный",cat:"dye",unit:"кг",price:85,density:3.00,note:"охра"},
+{name:"Оксид хрома зелёный",cat:"dye",unit:"кг",price:150,density:3.00,note:"камуфляж"},
+{name:"База MZX (Emzeks)",cat:"base",unit:"л",price:480,density:0.95,note:"1 материал; раскладка А/Б/В вне кода [VERIFY]"},
+{name:"Отдушка premium USA",cat:"fragrance",unit:"л",price:900,density:0.90,note:"CandleScience/Flaming [VERIFY]"},
+{name:"Отдушка premium FR/DE",cat:"fragrance",unit:"л",price:1100,density:0.90,note:"Trudon/Duellberg [VERIFY]"},
+{name:"Цитронелла",cat:"additive",unit:"л",price:450,density:0.88,note:"anti-mosquito 2-3%"},
+{name:"Масло нима",cat:"additive",unit:"л",price:380,density:0.92,note:"anti-mosquito 1-2%"},
+{name:"Фитиль AMSR v2.2",cat:"wick",unit:"м",price:28,density:0,note:"гейзер"},
+{name:"Фитиль хлопок Ø3",cat:"wick",unit:"м",price:12,density:0,note:"стандарт"},
+{name:"Фитиль деревянный",cat:"wick",unit:"шт",price:8,density:0,note:"крафт"},
+{name:"Стакан/пузырёк рефилл",cat:"vessel",unit:"шт",price:14,density:0,note:"inner vessel, в COGS"},
+{name:"Банка 200мл",cat:"vessel",unit:"шт",price:9,density:0,note:"тара свеча"},
+{name:"Палочки ротанг",cat:"stick",unit:"шт",price:3,density:0,note:"диффузор"},
+{name:"Этикетка MZG",cat:"packaging",unit:"шт",price:2.5,density:0,note:"маркировка"}
+];
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function toast(m){const t=$("toast");t.textContent=m;t.style.display="block";clearTimeout(window._tt);window._tt=setTimeout(()=>t.style.display="none",2600)}
+function isBulk(u){return BULK.includes(u)}
+function ppg(m){if(!m)return 0;if(m.unit==="кг"||m.unit==="л")return m.price/1000;if(m.unit==="г"||m.unit==="мл")return m.price;return 0}
+function mat(id){return mats.find(x=>x.id===Number(id))}
+function vcyl(D,H){return Math.PI/4*D*D*H/1000}
+function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open(DB,VER);r.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains("mats"))d.createObjectStore("mats",{keyPath:"id",autoIncrement:true});if(!d.objectStoreNames.contains("recs"))d.createObjectStore("recs",{keyPath:"id",autoIncrement:true});if(!d.objectStoreNames.contains("set"))d.createObjectStore("set",{keyPath:"k"})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+function all(s){return new Promise((res,rej)=>{const r=db.transaction(s,"readonly").objectStore(s).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}
+function get1(s,k){return new Promise((res,rej)=>{const r=db.transaction(s,"readonly").objectStore(s).get(k);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+function put(s,v){return new Promise((res,rej)=>{const r=db.transaction(s,"readwrite").objectStore(s).put(v);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+function del(s,k){return new Promise((res,rej)=>{const r=db.transaction(s,"readwrite").objectStore(s).delete(k);r.onsuccess=()=>res(true);r.onerror=()=>rej(r.error)})}
+function clr(s){return new Promise((res,rej)=>{const r=db.transaction(s,"readwrite").objectStore(s).clear();r.onsuccess=()=>res(true);r.onerror=()=>rej(r.error)})}
+async function init(){db=await openDB();mats=await all("mats");if(!mats.length){for(const m of DEF)await put("mats",m);mats=await all("mats")}recs=await all("recs");const s=await get1("set","main");if(s)set={...set,...s};buildCats();applySet();$("waste").value=set.waste;renderAll();regSW()}
+function buildCats(){const f=$("mFilter"),n=$("nmCat");f.innerHTML='<option value="">Все</option>'+Object.entries(CATS).map(([k,v])=>`<option value="${k}">${v}</option>`).join("");n.innerHTML=Object.entries(CATS).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}
+function applySet(){$("sWaste").value=set.waste;$("sEnergy").value=set.energy;$("sLabor").value=set.labor;$("sQc").value=set.qc;$("sRoy").value=set.roy}
+function showTab(t){document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.id==="tab-"+t));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===t));if(t==="recipes")renderRecs();if(t==="materials")renderMats();if(t==="calc")fillSel()}
+function setMode(m){mode=m;$("mMass").classList.toggle("on",m==="mass");$("mGeom").classList.toggle("on",m==="geom");$("massFields").style.display=m==="mass"?"":"none";$("geomFields").style.display=m==="geom"?"":"none";$("cavCard").style.display=m==="geom"?"":"none";renderCavs();renderCons()}
+function optGroup(filterFn){const g={};mats.filter(filterFn).forEach(m=>{(g[m.cat]=g[m.cat]||[]).push(m)});return Object.keys(CATS).filter(c=>g[c]).map(c=>`<optgroup label="${CATS[c]}">`+g[c].map(m=>`<option value="${m.id}">${esc(m.name)} · ${m.price} грн/${m.unit}${m.density?" · ρ"+m.density:""}</option>`).join("")+"</optgroup>").join("")}
+function fillSel(){$("mSel").innerHTML=optGroup(m=>isBulk(m.unit));$("cSel").innerHTML=optGroup(m=>true);$("gBody").innerHTML=optGroup(m=>m.cat==="body"||m.cat==="binder"||m.cat==="filler");$("rfBase").innerHTML=optGroup(m=>m.cat==="base"||m.cat==="fragrance"||m.cat==="additive");$("rfFrag").innerHTML=optGroup(m=>m.cat==="fragrance"||m.cat==="base");if(!geom.body&&mats.length)geom.body=mats.find(m=>m.cat==="body")?.id||mats[0].id;$("gBody").value=geom.body||"";if(!rf.base)rf.base=mats.find(m=>m.cat==="base")?.id||null;if(!rf.frag)rf.frag=mats.find(m=>m.cat==="fragrance")?.id||null;$("rfBase").value=rf.base||"";$("rfFrag").value=rf.frag||""}
+function addMass(){const id=+$("mSel").value,v=parseFloat($("mVal").value),m=mat(id);if(!m)return toast("нет материала");if(!isBulk(m.unit))return toast("массовые % только для кг/л/г/мл");const e=massC.find(c=>c.id===id);if(e)e.v+=v;else massC.push({id,name:m.name,unit:m.unit,price:m.price,cat:m.cat,v});$("mVal").value=10;renderMass()}
+function updMass(i,v){massC[i].v=Math.max(0,parseFloat(v)||0);renderMass()}
+function rmMass(i){massC.splice(i,1);renderMass()}
+function renderMass(){const el=$("massList");if(!massC.length){el.innerHTML='<div class="empty">нет</div>';$("mTotal").innerHTML="";return}const b=parseFloat($("batch").value)||0;let tp=0;el.innerHTML="<table><tr><th>Материал</th><th>%</th><th>г</th><th></th></tr>"+massC.map((c,i)=>{tp+=c.v;const g=b*c.v/100;return `<tr><td>${esc(c.name)}</td><td><input type="number" min="0" step="0.1" value="${c.v}" onchange="updMass(${i},this.value)"></td><td class="small">${g.toFixed(1)}</td><td><button class="del" onclick="rmMass(${i})">×</button></td></tr>`}).join("")+"</table>";const cl=tp>100.5?"err":Math.abs(tp-100)<=0.5?"ok":"warn";$("mTotal").innerHTML=`Σ <b class="${cl}">${tp.toFixed(2)}%</b> ${tp>100.5?"превышение":tp<99.5?"неполно":"норма"}`}
+function normalizePercent(){const s=massC.reduce((a,c)=>a+c.v,0);if(s<=0)return toast("нет %-компонентов");massC.forEach(c=>c.v=+(c.v*100/s).toFixed(3));renderMass();toast("нормализовано")}
+function addCons(){const id=+$("cSel").value,q=parseFloat($("cVal").value),m=mat(id);if(!m)return toast("нет материала");if(!(q>0))return toast("кол-во > 0");const e=cons.find(c=>c.id===id);if(e)e.q+=q;else cons.push({id,name:m.name,unit:m.unit,price:m.price,bulk:isBulk(m.unit),q});$("cVal").value=1;renderCons()}
+function updCons(i,v){cons[i].q=Math.max(0,parseFloat(v)||0);renderCons()}
+function rmCons(i){cons.splice(i,1);renderCons()}
+function consCostOne(c){return c.bulk?(c.q/1000)*c.price:c.q*c.price}
+function renderCons(){const el=$("consList");if(!cons.length){el.innerHTML='<div class="empty">нет</div>';return}el.innerHTML="<table><tr><th>Расходник</th><th>кол-во</th><th>грн/изд.</th><th></th></tr>"+cons.map((c,i)=>`<tr><td>${esc(c.name)}<br><span class="small">${c.bulk?"г/мл на изд.":"шт/м на изд."} · ${c.price} грн/${c.unit}</span></td><td><input type="number" min="0" step="0.01" value="${c.q}" onchange="updCons(${i},this.value)"></td><td class="small">${consCostOne(c).toFixed(2)}</td><td><button class="del" onclick="rmCons(${i})">×</button></td></tr>`).join("")+"</table>"}
+function addCavity(){cavs.push({type:"cyl",d:40,h:24,ml:0,fill:"wax",pad:0,padMat:null,hs:0});renderCavs()}
+function rmCav(i){cavs.splice(i,1);renderCavs()}
+function updCav(i,k,v){cavs[i][k]=(k==="fill")?v:(parseFloat(v)||0);if(k==="type")cavs[i].fill=cavs[i].fill||"none";renderCavs()}
+function cavVol(c){return c.type==="measured"?(c.ml||0):vcyl(c.d,c.h)}
+function cavFillVol(c){if(c.type==="measured")return c.fill==="none"?0:(c.ml||0);const usable=Math.max(0,c.h-(c.pad||0)-(c.hs||0));if(c.fill==="none")return 0;if(c.fill==="absorb")return vcyl(c.d,c.h-(c.pad||0));return vcyl(c.d,usable)}
+function cavPadVol(c){if(c.type==="measured")return 0;return c.pad?vcyl(c.d,c.pad):0}
+function renderCavs(){const el=$("cavList");if(!cavs.length){el.innerHTML='<div class="empty">нет выемок</div>';return}el.innerHTML=cavs.map((c,i)=>`<div class="cav"><div class="cav-h"><span>Выемка ${i+1} · ${cavVol(c).toFixed(1)} см³</span><button class="del" onclick="rmCav(${i})">×</button></div>
+<div class="row"><div><label>Тип формы</label><select onchange="updCav(${i},'type',this.value)"><option value="cyl" ${c.type==="cyl"?"selected":""}>цилиндр (формула)</option><option value="measured" ${c.type==="measured"?"selected":""}>irregular (замер мл)</option></select></div><div><label>Заполнение</label><select onchange="updCav(${i},'fill',this.value)">${Object.entries(FILL).map(([k,v])=>`<option value="${k}" ${c.fill===k?"selected":""}>${v}</option>`).join("")}</select></div></div>
+${c.type==="cyl"?`<div class="row"><div><label>D внутр., мм</label><input type="number" min="0" value="${c.d}" onchange="updCav(${i},'d',this.value)"></div><div><label>h полости, мм</label><input type="number" min="0" value="${c.h}" onchange="updCav(${i},'h',this.value)"></div></div><div class="row"><div><label>Термо-дно h, мм</label><input type="number" min="0" value="${c.pad}" onchange="updCav(${i},'pad',this.value)"></div><div><label>Headspace, мм</label><input type="number" min="0" value="${c.hs}" onchange="updCav(${i},'hs',this.value)"></div></div><label>Материал термо-дна (вермикулит)</label><select onchange="updCav(${i},'padMat',this.value)"><option value="">—</option>${optGroup(m=>m.cat==="filler")}</select>`:`<div class="row"><div><label>Объём полости, мл</label><input type="number" min="0" value="${c.ml}" onchange="updCav(${i},'ml',this.value)"></div></div><div class="small">Irregular (бутылка/банка): замер водой → мл. Формула цилиндра не применяется.</div>`}
+</div>`).join("");if(cavs.some(c=>c.fill==="liquid")){$("refillCard").style.display="";syncRfMl()}else if(mode==="geom"&&!cavs.some(c=>c.fill==="liquid")){/* refill остаётся видимым для dvessel */}}
+function syncRfMl(){const mc=cavs.find(c=>c.type==="measured"&&c.fill!=="none");if(mc&&mc.ml)$("rfMl").value=mc.ml}
+function coreApply(){const t=parseFloat($("gWall").value)||0;if(t<=0)return toast("t=0 → ручной ввод");const d=Math.max(0,(parseFloat($("gDout").value)||0)-2*t);cavs.forEach(c=>{if(c.type==="cyl")c.d=d});geom.wall=t;renderCavs();toast("D выемок = "+d.toFixed(1)+" мм")}
+function readGeom(){geom.dout=parseFloat($("gDout").value)||0;geom.h=parseFloat($("gH").value)||0;geom.body=+$("gBody").value||null;geom.qty=Math.max(1,parseInt($("gQty").value)||1);geom.wall=parseFloat($("gWall").value)||0}
+function bodyVol(){readGeom();let v=vcyl(geom.dout,geom.h);cavs.forEach(c=>v-=cavVol(c));return Math.max(0,v)}
+function calc(){if(mode==="mass")calcMass();else calcGeom()}
+function calcMass(){const b=parseFloat($("batch").value)||0;if(b<=0)return toast("масса партии");const iw=parseFloat($("itemW").value)||0,w=parseFloat($("waste").value)||0;const useful=b*Math.max(0,1-w/100);const pcs=iw>0?Math.max(0,Math.floor(useful/iw)):1;let tp=0,raw=0,lines="";massC.forEach(c=>{tp+=c.v;const g=b*c.v/100,co=g*ppg(c);raw+=co;lines+=`<div class="rr"><span>${esc(c.name)} · ${c.v}%</span><span class="v">${g.toFixed(1)} г · ${co.toFixed(2)} грн</span></div>`});if(tp>100.5)return toast("Σ% > 100");const consOne=cons.reduce((a,c)=>a+consCostOne(c),0);const consBatch=consOne*pcs;raw+=consBatch;const en=set.energy,lab=set.labor,qc=set.qc*pcs,roy=raw*set.roy/100,cogs=raw+en+lab+qc+roy;showRes(lines,useful,pcs,raw,en+lab+qc,roy,cogs,pcs>0?cogs/pcs:0,tp)}
+function calcGeom(){readGeom();const N=geom.qty;const bm=mat(geom.body);if(!bm)return toast("выбери матрицу тела");if(!bm.density)return toast("у матрицы нет плотности ρ");const bv=bodyVol();const bmass=bv*bm.density;const bcost=bmass/1000*bm.price;let lines=`<div class="rr"><span>Тело (${esc(bm.name)}) ${bv.toFixed(1)} см³</span><span class="v">${bmass.toFixed(1)} г · ${bcost.toFixed(2)} грн</span></div>`;let raw=bcost;let warnFrag="";cavs.forEach((c,i)=>{const fv=cavFillVol(c),pv=cavPadVol(c);if(fv>0&&c.fill!=="none"){const fm=c.fill==="wax"?mat(defaultWax()):c.fill==="liquid"?mat(rf.base):mat(c.padMat||defaultVer());if(!fm||!fm.density){lines+=`<div class="rr"><span>Выемка ${i+1} ${FILL[c.fill]}</span><span class="v err">нет ρ материала</span></div>`;return}const fmass=fv*fm.density,fcost=fmass/1000*fm.price;raw+=fcost;lines+=`<div class="rr"><span>Выемка ${i+1} ${FILL[c.fill]} (${esc(fm.name)}) ${fv.toFixed(1)} см³</span><span class="v">${fmass.toFixed(1)} г · ${fcost.toFixed(2)} грн</span></div>`}if(pv>0){const pm=mat(c.padMat)||mat(defaultVer());if(pm&&pm.density){const pmass=pv*pm.density,pcost=pmass/1000*pm.price;raw+=pcost;lines+=`<div class="rr"><span>Выемка ${i+1} термо-дно (${esc(pm.name)}) ${pv.toFixed(1)} см³</span><span class="v">${pmass.toFixed(1)} г · ${pcost.toFixed(2)} грн</span></div>`}}});const rfMl=parseFloat($("rfMl").value)||0,rfPct=parseFloat($("rfPct").value)||0,bas=mat(rf.base),frg=mat(rf.frag);if(rfMl>0&&bas&&frg){const fml=rfMl*rfPct/100,bml=rfMl-fml;const fmass=fml*(frg.density||0.9),bmass2=bml*(bas.density||0.95);const fcost=fmass/1000*frg.price,bcost2=bmass2/1000*bas.price;raw+=fcost+bcost2;lines+=`<div class="rr"><span>Заправка: отдушка ${fml.toFixed(1)} мл</span><span class="v">${fmass.toFixed(1)} г · ${fcost.toFixed(2)} грн</span></div><div class="rr"><span>Заправка: база ${bml.toFixed(1)} мл</span><span class="v">${bmass2.toFixed(1)} г · ${bcost2.toFixed(2)} грн</span></div>`;if(rfPct<20||rfPct>30)warnFrag=`<span class="warn">⚠ % отдушки вне 20–30 [VERIFY]</span>`}const consOne=cons.reduce((a,c)=>a+consCostOne(c),0);const consBatch=consOne*N;raw+=consBatch;lines+=`<div class="rr"><span>Расходники ×${N}</span><span class="v">${consBatch.toFixed(2)} грн</span></div>`;const en=set.energy,lab=set.labor,qc=set.qc*N,roy=raw*set.roy/100,cogs=raw+en+lab+qc+roy;showRes(lines,0,N,raw,en+lab+qc,roy,cogs,N>0?cogs/N:0,-1,warnFrag)}
+function defaultWax(){return mats.find(m=>m.name.includes("П-2"))?.id||mats.find(m=>m.cat==="wax")?.id}
+function defaultVer(){return mats.find(m=>m.name.includes("Вермикулит"))?.id}
+function showRes(lines,useful,pcs,raw,ovh,roy,cogs,cpi,tp,wf){let h=lines+`<hr style="border-color:#333;margin:8px 0">`;if(mode==="mass")h+=`<div class="rr"><span>Полезная масса</span><span class="v">${useful.toFixed(1)} г</span></div>`;h+=`<div class="rr"><span>Изделий</span><span class="v">${pcs}</span></div><div class="rr"><span>Сырьё+расходники</span><span class="v">${raw.toFixed(2)} грн</span></div><div class="rr"><span>Энергия+труд+QC</span><span class="v">${ovh.toFixed(2)} грн</span></div><div class="rr"><span>Роялти ${set.roy}%</span><span class="v">${roy.toFixed(2)} грн</span></div><div class="rr" style="font-size:14px"><span><b>COGS партии</b></span><span class="v" style="color:var(--ac)">${cogs.toFixed(2)} грн</span></div><div class="rr"><span>COGS на изделие</span><span class="v">${cpi.toFixed(2)} грн</span></div>`;if(tp>=0){const cl=tp>100.5?"err":Math.abs(tp-100)<=0.5?"ok":"warn";h+=`<div class="rr"><span class="${cl}">Σ массовых ${tp.toFixed(2)}%</span><span></span></div>`}if(cpi>0&&mode==="geom"){const perG=cpi/Math.max(1,vcyl(geom.dout,geom.h)*(mat(geom.body)?.density||1));if(perG>5)h+=`<div class="rr"><span class="err">⚠ аномалия COGS/г — проверь ρ и размеры</span><span></span></div>`}if(wf)h+=`<div class="rr"><span>${wf}</span><span></span></div>`;$("resultContent").innerHTML=h;$("resultBox").style.display="block";toast("расчёт готов")}
+/* == PART 2 END == */
+  function clearRecipe(){cur=null;massC=[];cons=[];cavs=[];rf={ml:100,pct:25,base:null,frag:null};geom={dout:70,h:120,body:null,wall:0,qty:1};$("rName").value="";$("rNotes").value="";$("batch").value=1000;$("itemW").value=100;$("waste").value=set.waste;$("gDout").value=70;$("gH").value=120;$("gQty").value=1;$("gWall").value=0;$("rfMl").value=100;$("rfPct").value=25;$("resultBox").style.display="none";setMode("mass");fillSel();renderMass();renderCons();renderCavs();toast("новая")}
+function preset(p){if(p==="double"){setMode("mass");$("pType").value="candle";$("batch").value=1000;$("itemW").value=100;const w=defaultWax(),s=mats.find(m=>m.name.includes("Соевый")),st=mats.find(m=>m.name.includes("Стеарин"));massC=[];if(w)massC.push({id:w,name:"Парафин П-2",unit:"кг",price:45,cat:"wax",v:40});if(s)massC.push({id:s.id,name:s.name,unit:s.unit,price:s.price,cat:s.cat,v:54});if(st)massC.push({id:st.id,name:st.name,unit:st.unit,price:st.price,cat:st.cat,v:6});renderMass();toast("двойная свеча → масса")}
+else if(p==="tea"){setMode("geom");$("gType").value="planter";$("gDout").value=70;$("gH").value=120;cavs=[{type:"cyl",d:40,h:24,ml:0,fill:"wax",pad:8,padMat:defaultVer(),hs:3}];renderCavs();toast("кашпо чайное")}
+else if(p==="tablet"){setMode("geom");$("gType").value="tablet";$("gDout").value=90;$("gH").value=35;cavs=[{type:"cyl",d:50,h:18,ml:0,fill:"none",pad:0,padMat:null,hs:0}];renderCavs();toast("таблетка")}
+else if(p==="dbath"){setMode("geom");$("gType").value="diffuser";$("gDout").value=70;$("gH").value=110;cavs=[{type:"cyl",d:45,h:60,ml:0,fill:"liquid",pad:0,padMat:null,hs:3}];$("refillCard").style.display="";renderCavs();toast("диффузор ванна")}
+else if(p==="dvessel"){setMode("geom");$("gType").value="diffuser";$("gDout").value=70;$("gH").value=110;cavs=[{type:"measured",d:0,h:0,ml:100,fill:"none",pad:0,padMat:null,hs:0}];const v=mats.find(m=>m.cat==="vessel"),k=mats.find(m=>m.cat==="stick");cons=[];if(v)cons.push({id:v.id,name:v.name,unit:v.unit,price:v.price,bulk:false,q:1});if(k)cons.push({id:k.id,name:k.name,unit:k.unit,price:k.price,bulk:false,q:6});$("refillCard").style.display="";renderCavs();renderCons();toast("диффузор пузырёк")}
+else if(p==="combo"){setMode("geom");$("gType").value="combo";$("gDout").value=90;$("gH").value=120;cavs=[{type:"cyl",d:40,h:24,ml:0,fill:"wax",pad:8,padMat:defaultVer(),hs:3},{type:"measured",d:0,h:0,ml:100,fill:"none",pad:0,padMat:null,hs:0}];$("refillCard").style.display="";renderCavs();toast("комбо")}
+else if(p==="sub"){setMode("geom");$("gType").value="sub";$("gDout").value=80;$("gH").value=25;cavs=[{type:"cyl",d:60,h:15,ml:0,fill:"wax",pad:0,padMat:null,hs:2}];renderCavs();toast("цоколь")}}
+async function saveRecipe(){const n=$("rName").value.trim();if(!n)return toast("название");const base={name:n,mode,notes:$("rNotes").value.trim(),updatedAt:new Date().toISOString()};if(mode==="mass")base.data={type:$("pType").value,batch:+$("batch").value,itemW:+$("itemW").value,waste:+$("waste").value,massC,cons};else{readGeom();base.data={gType:$("gType").value,geom,cons,cavs,rf:{ml:+$("rfMl").value,pct:+$("rfPct").value,base:rf.base,frag:rf.frag}}}if(cur)base.id=cur;const k=await put("recs",base);if(!cur)cur=k;recs=await all("recs");renderRecs();toast("сохранено")}
+function renderRecs(){const el=$("recList");if(!recs.length){el.innerHTML='<div class="empty">нет</div>';return}const tn={candle:"Свеча",planter:"Кашпо",hybrid:"Гейзер",diffuser:"Диффузор",other:"Другое",tablet:"Таблетка",combo:"Комбо",sub:"Цоколь"};const sr=[...recs].sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));el.innerHTML=sr.map(r=>{const d=new Date(r.updatedAt).toLocaleString("ru-RU");const sm=r.mode==="mass"?`${(r.data.massC||[]).length} комп. · ${(r.data.cons||[]).length} расх.`:`${(r.data.cavs||[]).length} выемок · ${(r.data.cons||[]).length} расх.`;return `<div class="card" style="border-left:3px solid var(--ac)"><div style="display:flex;justify-content:space-between;gap:8px"><div><b style="color:var(--ac)">${esc(r.name)}</b><br><span class="small">${tn[r.data.type||r.data.gType]||r.mode} · ${d}</span></div><div style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn sm bl" onclick="loadRec(${r.id})">Загрузить</button><button class="btn sm" onclick="dupRec(${r.id})">Копия</button><button class="btn sm rd" onclick="delRec(${r.id})">×</button></div></div><div class="small" style="margin-top:6px">${sm}</div></div>`}).join("")}
+function loadRec(id){const r=recs.find(x=>x.id===id);if(!r)return;cur=r.id;setMode(r.mode);$("rName").value=r.name;$("rNotes").value=r.notes||"";if(r.mode==="mass"){$("pType").value=r.data.type||"candle";$("batch").value=r.data.batch;$("itemW").value=r.data.itemW;$("waste").value=r.data.waste;massC=r.data.massC||[];cons=r.data.cons||[];renderMass();renderCons()}else{$("gType").value=r.data.gType||"planter";geom=r.data.geom||geom;$("gDout").value=geom.dout;$("gH").value=geom.h;$("gQty").value=geom.qty;$("gWall").value=geom.wall||0;cavs=r.data.cavs||[];cons=r.data.cons||[];rf=r.data.rf||rf;$("rfMl").value=rf.ml;$("rfPct").value=rf.pct;fillSel();renderCavs();renderCons()}showTab("calc");toast("загружено")}
+async function dupRec(id){const r=recs.find(x=>x.id===id);if(!r)return;await put("recs",{...r,id:undefined,name:r.name+" (копия)",updatedAt:new Date().toISOString()});recs=await all("recs");renderRecs();toast("копия")}
+async function delRec(id){if(!confirm("удалить рецепт?"))return;await del("recs",id);recs=await all("recs");if(cur===id)cur=null;renderRecs();toast("удалено")}
+function renderMats(){const q=($("mSearch").value||"").toLowerCase().trim(),cf=$("mFilter").value;const fl=mats.filter(m=>{const h=(m.name+" "+(m.note||"")+" "+(CATS[m.cat]||"")).toLowerCase();return(!q||h.includes(q))&&(!cf||m.cat===cf)});$("mCount").textContent=mats.length;const el=$("matList");if(!fl.length){el.innerHTML='<div class="empty">не найдено</div>';return}el.innerHTML="<table><tr><th>Материал</th><th>Кат.</th><th>Цена</th><th>ρ</th><th></th></tr>"+fl.map(m=>`<tr><td><b>${esc(m.name)}</b><br><span class="small">${esc(m.note||"")}</span></td><td><span class="badge b-${m.cat}">${CATS[m.cat]||m.cat}</span></td><td>${m.price} грн/${m.unit}</td><td class="small">${m.density||"—"}</td><td style="white-space:nowrap"><button class="btn sm bl" onclick="editMat(${m.id})">Изм.</button><button class="del" onclick="delMat(${m.id})">×</button></td></tr>`).join("")+"</table>"}
+function saveMat(){const n=$("nmName").value.trim();if(!n)return toast("название");const p={name:n,cat:$("nmCat").value,unit:$("nmUnit").value,price:parseFloat($("nmPrice").value)||0,density:parseFloat($("nmDen").value)||0,note:$("nmNote").value.trim()};const e=$("mEditId").value;if(e)p.id=+e;put("mats",p).then(async()=>{mats=await all("mats");cancelMat();renderAll();toast(e?"обновлено":"добавлено")})}
+function editMat(id){const m=mat(id);if(!m)return;$("mEditId").value=m.id;$("nmName").value=m.name;$("nmCat").value=m.cat;$("nmUnit").value=m.unit;$("nmPrice").value=m.price;$("nmDen").value=m.density||"";$("nmNote").value=m.note||"";$("mFormT").textContent="Редактирование";showTab("materials")}
+function cancelMat(){$("mEditId").value="";["nmName","nmNote"].forEach(i=>$(i).value="");$("nmCat").value="wax";$("nmUnit").value="кг";$("nmPrice").value=0;$("nmDen").value=0;$("mFormT").textContent="Новый материал"}
+async function delMat(id){if(!confirm("удалить материал? рецепты сохранят историю"))return;await del("mats",id);mats=await all("mats");renderAll();toast("удалено")}
+async function saveSet(){set={waste:+$("sWaste").value||0,energy:+$("sEnergy").value||0,labor:+$("sLabor").value||0,qc:+$("sQc").value||0,roy:+$("sRoy").value||0};await put("set",{k:"main",...set});$("waste").value=set.waste;renderMass();toast("настройки сохранены")}
+async function exportAll(){const d={app:"MZG-Craft-Calc",version:"1.2",at:new Date().toISOString(),mats:await all("mats"),recs:await all("recs"),set};const bl=new Blob([JSON.stringify(d,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download="MZG_Calc_v12_"+new Date().toISOString().slice(0,10)+".json";a.click();URL.revokeObjectURL(a.href);toast("экспорт готов")}
+async function importAll(e){const f=e.target.files[0];if(!f)return;try{const t=await f.text(),d=JSON.parse(t);if(!Array.isArray(d.mats))throw new Error("формат");await clr("mats");await clr("recs");for(const m of d.mats)await put("mats",m);if(Array.isArray(d.recs))for(const r of d.recs)await put("recs",r);if(d.set){set=d.set;await put("set",{k:"main",...set});applySet()}mats=await all("mats");recs=await all("recs");cur=null;massC=[];cons=[];cavs=[];renderAll();toast("импорт готов")}catch(err){toast("ошибка: "+err.message)}e.target.value=""}
+async function resetDB(){if(!confirm("сбросить базу?"))return;if(!confirm("точно? сделай экспорт"))return;await clr("mats");await clr("recs");await clr("set");for(const m of DEF)await put("mats",m);mats=await all("mats");recs=[];cur=null;massC=[];cons=[];cavs=[];set={waste:5,energy:0,labor:0,qc:0.35,roy:15};await put("set",{k:"main",...set});applySet();$("waste").value=set.waste;renderAll();toast("сброшено")}
+function renderAll(){fillSel();renderMats();renderMass();renderCons();renderCavs();renderRecs()}
+async function regSW(){if(!("serviceWorker"in navigator))return;if(location.protocol==="file:"){toast("для установки нужен HTTPS/localhost");return}try{const r=await navigator.serviceWorker.register("./sw.js");if(r.waiting)r.waiting.postMessage({type:"SKIP_WAITING"});navigator.serviceWorker.addEventListener("controllerchange",()=>{if(window._swr)return;window._swr=true;location.reload()})}catch(e){console.warn("SW fail",e)}}
+init().catch(e=>{console.error(e);toast("ошибка init: "+e.message)});
+</script>
 </body>
 </html>
