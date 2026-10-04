@@ -1,4 +1,4 @@
-const CACHE = "mzg-craft-calc-v1";
+const CACHE = "mzg-craft-calc-v2";
 
 const ASSETS = [
   "./",
