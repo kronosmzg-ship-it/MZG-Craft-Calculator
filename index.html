@@ -96,7 +96,7 @@ td input{padding:6px;font-size:12px}
 <button onclick="preset('dbath')">💧 Диффузор ванна</button>
 <button onclick="preset('dvessel')">🫙 Диффузор пузырёк</button>
 <button onclick="preset('combo')">🔥 Комбо свеча+диф</button>
-<button onclick="preset('tablet')">🌿 Таблетка/растение</button>
+<button onclick="preset('tablet')">🧱 Таблетка</button> <button onclick="preset('plant')">🌿 Растение</button>
 <button onclick="preset('roman')">🏛 Римский бетон (Emzedgi)</button>
 <div class="row"><div><label>Класс веса изделия</label><select id="wClass" onchange="onWClass()"><option value="auto">авто (по расчёту)</option><option value="light">лёгкое &lt;500 г</option><option value="mid" selected>среднее 500–1200 г</option><option value="heavy">тяжёлое &gt;1200 г</option><option value="author">авторский (эталон вручную)</option></select></div><div id="wAuthorWrap" style="display:none"><label>Эталонный вес, г</label><input id="wAuthor" type="number" min="1" value="847"></div></div>
 <div id="massFields">
@@ -219,7 +219,7 @@ const BLEND={
 // Твёрдый фитиль Capillary Matrix v1.0 — доли [VERIFY], дефолт не выдуман
 const WICKMAT={label:"Capillary Matrix v1.0 — твёрдый фитиль, минеральная матрица",parts:[["A-HEMP",40],["CEM-M500",30],["A-ST",15],["W-P2",15]]};
 const PLAN={bdv:"BD-V — BEDROCK Vessel (стакан, прямая заливка)",bdh:"BD-H — BEDROCK Holder (под сменный блок)",sbb:"SB-B — SUBSTRUCTURE Base (гильза 20–30 мм)",sba:"SB-A — SUBSTRUCTURE Anchor (чайная, имя линейки на усмотрение)",sbt:"SB-T — SUBSTRUCTURE Tray (поднос)",tablet:"Таблетка / кашпо под растение",moulded:"Формовая свеча (irregular, объём по воде/ручной)",sculptural:"Скульптурная/авторская (irregular, декор по умолч.)",diffuser:"Диффузор",combo:"Комбо свеча+диффузор"};
-let db,mats=[],recs=[],cur=null,mode="mass",profile="emzedgi",bodyType="mix",cavs=[],cons=[],massC=[],rf={ml:100,pct:25,base:null,frag:null},geom={dout:70,h:120,body:null,wall:0,qty:1},wClass="mid",wAuthor=847,set={waste:5,energy:0,labor:0,qc:0.35,roy:15,markE:3,markO:2};
+let db,mats=[],recs=[],cur=null,mode="geom",profile="emzedgi",bodyType="mix",cavs=[],cons=[],massC=[],rf={ml:100,pct:25,base:null,frag:null},geom={dout:70,h:120,body:null,wall:0,qty:1},wClass="mid",wAuthor=847,set={waste:5,energy:0,labor:0,qc:0.35,roy:15,markE:3,markO:2};
 const DEF=[
 {code:"W-P2",name:"Парафин П-2 пищевой очистки",cat:"wax",unit:"кг",price:45,density:0.90,note:"Тпл 52–54°C [VERIFY]"},
 {code:"W-SOY-P",name:"Соевый воск Pillar (формовой)",cat:"wax",unit:"кг",price:130,density:0.93,note:"Тпл 56–60°C, матовый [VERIFY]"},
